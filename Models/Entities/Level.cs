@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Online_Learning.Models.Entities;
+
+public partial class Level
+{
+    public int LevelId { get; set; }
+
+    public string? LevelName { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
+    public int Status { get; set; }
+
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+}

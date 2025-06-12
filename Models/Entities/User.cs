@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Online_Learning.Models.Entities;
+
+public partial class User
+{
+    public string UserId { get; set; } = null!;
+
+    public string Email { get; set; } = null!;
+
+    public string Password { get; set; } = null!;
+
+    public string FullName { get; set; } = null!;
+
+    public DateOnly? DoB { get; set; }
+
+    public bool? Gender { get; set; }
+
+    public string? Phone { get; set; }
+
+    public string? Address { get; set; }
+
+    public string? AvatarUrl { get; set; }
+
+    public int? Status { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+    public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
+
+    public virtual ICollection<Discount> Discounts { get; set; } = new List<Discount>();
+
+    public virtual ICollection<DiscussionLesson> DiscussionLessons { get; set; } = new List<DiscussionLesson>();
+
+    public virtual ICollection<LessonProgress> LessonProgresses { get; set; } = new List<LessonProgress>();
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();
+
+    public virtual ICollection<UserCertificate> UserCertificates { get; set; } = new List<UserCertificate>();
+
+    public virtual ICollection<UserQuizResult> UserQuizResults { get; set; } = new List<UserQuizResult>();
+
+    public virtual ICollection<Role> Rolers { get; set; } = new List<Role>();
+}

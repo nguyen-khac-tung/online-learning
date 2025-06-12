@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Online_Learning.Models.Entities;
+
+public partial class Lesson
+{
+    public long LessonId { get; set; }
+
+    public long ModuleId { get; set; }
+
+    public int LessonNumber { get; set; }
+
+    public string LessonName { get; set; } = null!;
+
+    public string? LessonContent { get; set; }
+
+    public string? LessonVideo { get; set; }
+
+    public int? Duration { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public int Status { get; set; }
+
+    public virtual ICollection<DiscussionLesson> DiscussionLessons { get; set; } = new List<DiscussionLesson>();
+
+    public virtual ICollection<LessonProgress> LessonProgresses { get; set; } = new List<LessonProgress>();
+
+    public virtual Module Module { get; set; } = null!;
+}
