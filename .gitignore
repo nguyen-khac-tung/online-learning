@@ -10,3 +10,5 @@ packages/
 TestResults/
 
 *.log
+
+appsettings.Development.json

@@ -9,8 +9,6 @@ public partial class Module
 
     public string ModuleName { get; set; } = null!;
 
-    public string CourseId { get; set; } = null!;
-
     public int ModuleNumber { get; set; }
 
     public DateTime CreatedAt { get; set; }
@@ -18,6 +16,8 @@ public partial class Module
     public DateTime? UpdatedAt { get; set; }
 
     public int Status { get; set; }
+
+    public string CourseId { get; set; } = null!;
 
     public virtual Course Course { get; set; } = null!;
 

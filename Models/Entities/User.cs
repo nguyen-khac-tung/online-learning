@@ -33,11 +33,11 @@ public partial class User
 
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
 
     public virtual ICollection<Discount> Discounts { get; set; } = new List<Discount>();
-
-    public virtual ICollection<DiscussionLesson> DiscussionLessons { get; set; } = new List<DiscussionLesson>();
 
     public virtual ICollection<LessonProgress> LessonProgresses { get; set; } = new List<LessonProgress>();
 

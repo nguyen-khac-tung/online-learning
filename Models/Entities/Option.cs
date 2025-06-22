@@ -9,7 +9,7 @@ public partial class Option
 
     public long QuestionId { get; set; }
 
-    public string OptionText { get; set; } = null!;
+    public string Content { get; set; } = null!;
 
     public bool IsCorrect { get; set; }
 
