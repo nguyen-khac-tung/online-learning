@@ -1,5 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Online_Learning.Configurations;
 using Online_Learning.Models.Entities;
+using Online_Learning.Repositories.Implementations;
+using Online_Learning.Repositories.Interfaces;
+using Online_Learning.Services.Implementations;
+using Online_Learning.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +18,9 @@ builder.Services.AddDbContext<OnlineLearningContext>(option => option.UseSqlServ
 		builder.Configuration.GetConnectionString("MyCnn")
 	));
 builder.Services.AddCors();
+
+// Cấu hình DI
+builder.Services.AddDependencyInjectionConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
