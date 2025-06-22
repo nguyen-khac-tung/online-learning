@@ -9,23 +9,11 @@ public partial class UserAnswer
 
     public string UserId { get; set; } = null!;
 
-    public long QuestionId { get; set; }
+    public long OptionId { get; set; }
 
-    public long? OptionId { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public string? AnswerText { get; set; }
-
-    public bool IsCorrect { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public int Status { get; set; }
-
-    public virtual Option? Option { get; set; }
-
-    public virtual Question Question { get; set; } = null!;
+    public virtual Option Option { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
 }

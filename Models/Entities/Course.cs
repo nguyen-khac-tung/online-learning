@@ -41,6 +41,8 @@ public partial class Course
 
     public virtual ICollection<CourseImage> CourseImages { get; set; } = new List<CourseImage>();
 
+    public virtual ICollection<CoursePrice> CoursePrices { get; set; } = new List<CoursePrice>();
+
     public virtual Language? Language { get; set; }
 
     public virtual Level? Level { get; set; }

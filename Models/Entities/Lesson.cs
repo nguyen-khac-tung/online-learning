@@ -23,9 +23,9 @@ public partial class Lesson
 
     public DateTime? UpdatedAt { get; set; }
 
-    public int Status { get; set; }
+    public int? Status { get; set; }
 
-    public virtual ICollection<DiscussionLesson> DiscussionLessons { get; set; } = new List<DiscussionLesson>();
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<LessonProgress> LessonProgresses { get; set; } = new List<LessonProgress>();
 

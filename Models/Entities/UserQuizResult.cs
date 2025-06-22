@@ -13,8 +13,6 @@ public partial class UserQuizResult
 
     public decimal Score { get; set; }
 
-    public int TotalQuestions { get; set; }
-
     public int CorrectAnswers { get; set; }
 
     public DateTime StartTime { get; set; }
@@ -23,7 +21,7 @@ public partial class UserQuizResult
 
     public DateTime CreatedAt { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     public virtual Quiz Quiz { get; set; } = null!;
 

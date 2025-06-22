@@ -5,11 +5,13 @@ namespace Online_Learning.Models.Entities;
 
 public partial class LessonProgress
 {
-    public string UserId { get; set; } = null!;
-
     public long LessonId { get; set; }
 
-    public DateTime CompletedAt { get; set; }
+    public string UserId { get; set; } = null!;
+
+    public DateTime? CompletedAt { get; set; }
+
+    public bool? IsCompleted { get; set; }
 
     public virtual Lesson Lesson { get; set; } = null!;
 

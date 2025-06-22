@@ -13,6 +13,8 @@ public partial class Quiz
 
     public int? QuizTime { get; set; }
 
+    public int TotalQuestions { get; set; }
+
     public int? PassScore { get; set; }
 
     public DateTime CreatedAt { get; set; }

@@ -9,13 +9,13 @@ public partial class Category
 
     public string CategoryName { get; set; } = null!;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
 
-    public int Status { get; set; }
+    public int? Status { get; set; }
 
     public virtual ICollection<CourseCategory> CourseCategories { get; set; } = new List<CourseCategory>();
 }

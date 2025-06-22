@@ -19,6 +19,8 @@ public partial class OnlineLearningContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Comment> Comments { get; set; }
+
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<CourseCategory> CourseCategories { get; set; }
@@ -27,9 +29,9 @@ public partial class OnlineLearningContext : DbContext
 
     public virtual DbSet<CourseImage> CourseImages { get; set; }
 
-    public virtual DbSet<Discount> Discounts { get; set; }
+    public virtual DbSet<CoursePrice> CoursePrices { get; set; }
 
-    public virtual DbSet<DiscussionLesson> DiscussionLessons { get; set; }
+    public virtual DbSet<Discount> Discounts { get; set; }
 
     public virtual DbSet<Language> Languages { get; set; }
 
@@ -65,7 +67,6 @@ public partial class OnlineLearningContext : DbContext
     {
 
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CartItem>(entity =>
@@ -103,6 +104,33 @@ public partial class OnlineLearningContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.Property(e => e.CommentId)
+                .ValueGeneratedNever()
+                .HasColumnName("CommentID");
+            entity.Property(e => e.LessonId).HasColumnName("LessonID");
+            entity.Property(e => e.ParentCommentId).HasColumnName("ParentCommentID");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("UserID");
+
+            entity.HasOne(d => d.Lesson).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.LessonId)
+                .HasConstraintName("FK_Comments_Lessons");
+
+            entity.HasOne(d => d.ParentComment).WithMany(p => p.InverseParentComment)
+                .HasForeignKey(d => d.ParentCommentId)
+                .HasConstraintName("FK_Comments_Comments");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Comments_User");
         });
 
         modelBuilder.Entity<Course>(entity =>
@@ -184,7 +212,7 @@ public partial class OnlineLearningContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.CourseEnrollments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CourseEnrollment_User");
+                .HasConstraintName("FK_CourseEnrollment_User1");
         });
 
         modelBuilder.Entity<CourseImage>(entity =>
@@ -204,6 +232,26 @@ public partial class OnlineLearningContext : DbContext
                 .HasForeignKey(d => d.CourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CourseImages_Courses");
+        });
+
+        modelBuilder.Entity<CoursePrice>(entity =>
+        {
+            entity.ToTable("CoursePrice");
+
+            entity.Property(e => e.CoursePriceId)
+                .ValueGeneratedNever()
+                .HasColumnName("CoursePriceID");
+            entity.Property(e => e.CourseId)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CourseID");
+            entity.Property(e => e.Price).HasColumnType("money");
+
+            entity.HasOne(d => d.Course).WithMany(p => p.CoursePrices)
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CoursePrice_Courses");
         });
 
         modelBuilder.Entity<Discount>(entity =>
@@ -231,32 +279,6 @@ public partial class OnlineLearningContext : DbContext
                 .HasConstraintName("FK_Discount_User");
         });
 
-        modelBuilder.Entity<DiscussionLesson>(entity =>
-        {
-            entity.HasKey(e => e.DiscussionId);
-
-            entity.Property(e => e.DiscussionId).HasColumnName("DiscussionID");
-            entity.Property(e => e.LessonId).HasColumnName("LessonID");
-            entity.Property(e => e.ParentCommentId).HasColumnName("ParentCommentID");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(36)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("UserID");
-
-            entity.HasOne(d => d.Lesson).WithMany(p => p.DiscussionLessons)
-                .HasForeignKey(d => d.LessonId)
-                .HasConstraintName("FK_DiscussionLessons_Lessons");
-
-            entity.HasOne(d => d.ParentComment).WithMany(p => p.InverseParentComment)
-                .HasForeignKey(d => d.ParentCommentId)
-                .HasConstraintName("FK_DiscussionLessons_Parent");
-
-            entity.HasOne(d => d.User).WithMany(p => p.DiscussionLessons)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_DiscussionLessons_User");
-        });
-
         modelBuilder.Entity<Language>(entity =>
         {
             entity.Property(e => e.LanguageId)
@@ -267,32 +289,38 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Lesson>(entity =>
         {
-            entity.Property(e => e.LessonId).HasColumnName("LessonID");
+            entity.Property(e => e.LessonId)
+                .ValueGeneratedNever()
+                .HasColumnName("LessonID");
             entity.Property(e => e.LessonName).HasMaxLength(255);
             entity.Property(e => e.ModuleId).HasColumnName("ModuleID");
 
             entity.HasOne(d => d.Module).WithMany(p => p.Lessons)
                 .HasForeignKey(d => d.ModuleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Lessons_Modules");
         });
 
         modelBuilder.Entity<LessonProgress>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.LessonId });
+            entity.HasKey(e => new { e.LessonId, e.UserId });
 
+            entity.Property(e => e.LessonId).HasColumnName("LessonID");
             entity.Property(e => e.UserId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("UserID");
-            entity.Property(e => e.LessonId).HasColumnName("LessonID");
+            entity.Property(e => e.IsCompleted).HasDefaultValue(false);
 
             entity.HasOne(d => d.Lesson).WithMany(p => p.LessonProgresses)
                 .HasForeignKey(d => d.LessonId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LessonProgresses_Lessons");
 
             entity.HasOne(d => d.User).WithMany(p => p.LessonProgresses)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LessonProgresses_User");
         });
 
@@ -306,7 +334,9 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Module>(entity =>
         {
-            entity.Property(e => e.ModuleId).HasColumnName("ModuleID");
+            entity.Property(e => e.ModuleId)
+                .ValueGeneratedNever()
+                .HasColumnName("ModuleID");
             entity.Property(e => e.CourseId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
@@ -316,17 +346,21 @@ public partial class OnlineLearningContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.Modules)
                 .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Modules_Courses");
         });
 
         modelBuilder.Entity<Option>(entity =>
         {
-            entity.Property(e => e.OptionId).HasColumnName("OptionID");
-            entity.Property(e => e.OptionText).HasMaxLength(255);
+            entity.Property(e => e.OptionId)
+                .ValueGeneratedNever()
+                .HasColumnName("OptionID");
+            entity.Property(e => e.Content).HasMaxLength(255);
             entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
 
             entity.HasOne(d => d.Question).WithMany(p => p.Options)
                 .HasForeignKey(d => d.QuestionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Options_Questions");
         });
 
@@ -381,23 +415,29 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
-            entity.Property(e => e.QuestionName).HasMaxLength(255);
+            entity.Property(e => e.QuestionId)
+                .ValueGeneratedNever()
+                .HasColumnName("QuestionID");
+            entity.Property(e => e.Content).HasMaxLength(255);
             entity.Property(e => e.QuizId).HasColumnName("QuizID");
 
             entity.HasOne(d => d.Quiz).WithMany(p => p.Questions)
                 .HasForeignKey(d => d.QuizId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Questions_Quizzes");
         });
 
         modelBuilder.Entity<Quiz>(entity =>
         {
-            entity.Property(e => e.QuizId).HasColumnName("QuizID");
+            entity.Property(e => e.QuizId)
+                .ValueGeneratedNever()
+                .HasColumnName("QuizID");
             entity.Property(e => e.ModuleId).HasColumnName("ModuleID");
             entity.Property(e => e.QuizName).HasMaxLength(255);
 
             entity.HasOne(d => d.Module).WithMany(p => p.Quizzes)
                 .HasForeignKey(d => d.ModuleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Quizzes_Modules");
         });
 
@@ -454,10 +494,12 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<UserAnswer>(entity =>
         {
-            entity.Property(e => e.UserAnswerId).HasColumnName("UserAnswerID");
-            entity.Property(e => e.AnswerText).HasMaxLength(255);
+            entity.ToTable("UserAnswer");
+
+            entity.Property(e => e.UserAnswerId)
+                .ValueGeneratedNever()
+                .HasColumnName("UserAnswerID");
             entity.Property(e => e.OptionId).HasColumnName("OptionID");
-            entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.UserId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
@@ -466,15 +508,13 @@ public partial class OnlineLearningContext : DbContext
 
             entity.HasOne(d => d.Option).WithMany(p => p.UserAnswers)
                 .HasForeignKey(d => d.OptionId)
-                .HasConstraintName("FK_UserAnswers_Options");
-
-            entity.HasOne(d => d.Question).WithMany(p => p.UserAnswers)
-                .HasForeignKey(d => d.QuestionId)
-                .HasConstraintName("FK_UserAnswers_Questions");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserAnswer_Options");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserAnswers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_UserAnswers_User");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserAnswer_User");
         });
 
         modelBuilder.Entity<UserCertificate>(entity =>
@@ -509,7 +549,11 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<UserQuizResult>(entity =>
         {
-            entity.Property(e => e.UserQuizResultId).HasColumnName("UserQuizResultID");
+            entity.ToTable("UserQuizResult");
+
+            entity.Property(e => e.UserQuizResultId)
+                .ValueGeneratedNever()
+                .HasColumnName("UserQuizResultID");
             entity.Property(e => e.QuizId).HasColumnName("QuizID");
             entity.Property(e => e.Score).HasColumnType("decimal(5, 2)");
             entity.Property(e => e.UserId)
@@ -520,20 +564,17 @@ public partial class OnlineLearningContext : DbContext
 
             entity.HasOne(d => d.Quiz).WithMany(p => p.UserQuizResults)
                 .HasForeignKey(d => d.QuizId)
-                .HasConstraintName("FK_UserQuizResults_Quizzes");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserQuizResult_Quizzes");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserQuizResults)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_UserQuizResults_User");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserQuizResult_User");
         });
 
         OnModelCreatingPartial(modelBuilder);
     }
 
-	internal async Task<object> FindAsync(int id)
-	{
-		throw new NotImplementedException();
-	}
-
-	partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
