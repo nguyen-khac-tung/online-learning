@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Online_Learning.Models.DTOs.Response.Common;
 using Online_Learning.Models.DTOs.Response.User;
+using Online_Learning.Models.Entities;
 using Online_Learning.Services.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace Online_Learning.Controllers
 {
@@ -15,17 +17,72 @@ namespace Online_Learning.Controllers
 		{
 			_courseService = courseService;
 		}
+
+		/// <summary>
+		/// Get list of all courses (accessible by guest or user)
+		/// </summary>
+		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
 		[HttpGet]
-		public ActionResult<IEnumerable<CourseResponseDto>> GetAllCourses()
+		public async Task<ActionResult<IEnumerable<CourseResponseDTO>>> GetAllCoursesAsync()
 		{
-			var courses = _courseService.GetAllCourse();
+			var courses = await _courseService.GetAllCourseAsync();
 
 			if (courses == null || !courses.Any())
 			{
-				return NotFound(ApiResponse<IEnumerable<CourseResponseDto>>.NotFoundResponse("No courses found"));
+				return NotFound(ApiResponse<IEnumerable<CourseResponseDTO>>.NotFoundResponse("No courses found"));
 			}
 
-			return Ok(ApiResponse<IEnumerable<CourseResponseDto>>.SuccessResponse(courses, "Courses retrieved successfully"));
+			return Ok(ApiResponse<IEnumerable<CourseResponseDTO>>.SuccessResponse(courses, "Courses retrieved successfully"));
 		}
+
+		/// <summary>
+		/// Get detail of a specific course by ID (accessible by guest or user)
+		/// </summary>
+		/// <param name="id">Course ID</param>
+		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+		[HttpGet("{id}")]
+		public async Task<ActionResult<CourseResponseDTO>> GetCourseByIdAsync(string id)
+		{
+			var course = await _courseService.GetCourseByIdAsync(id);
+
+			if (course == null)
+			{
+				return NotFound(ApiResponse<IEnumerable<CourseResponseDTO>>.NotFoundResponse("No courses found"));
+			}
+
+			return Ok(ApiResponse<CourseResponseDTO>.SuccessResponse(course, "Courses retrieved successfully"));
+		}
+
+		/// <summary>
+		/// Get course in my learning by UserID (accessible by user)
+		/// </summary>
+		/// <param name="userId">User ID</param>
+		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+		[HttpGet("my-learning")]
+		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery]string userId)
+		{
+			var courses = await _courseService.GetCourseProgressByUserIdAsync(userId);
+			if (courses == null || !courses.Any())
+			{
+				return NotFound(ApiResponse<IEnumerable<CourseProgressResponseDTO>>.NotFoundResponse("No courses found"));
+			}
+
+			return Ok(ApiResponse<IEnumerable<CourseProgressResponseDTO>>.SuccessResponse(courses, "Courses retrieved successfully"));
+		}
+
+		/// <summary>
+		/// Mark as completed lesson (accessible by user)
+		/// </summary>
+		/// <param name="userId">User ID</param>
+		/// <param name="lessonId">Lesson ID</param>
+		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+		[HttpPost("mark-as-completed")]
+		public async Task<ActionResult> UpdateProgressLesson(string userId, long lessonId)
+		{
+			_courseService.UpdateLessonProgress(userId, lessonId);
+			return Ok(ApiResponse<string>.SuccessResponse(null, "Lesson marked as completed"));
+		}
+
+
 	}
 }

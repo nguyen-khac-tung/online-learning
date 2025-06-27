@@ -1,12 +1,16 @@
 ﻿
+using Online_Learning.Models.DTOs.Response.User;
+
 namespace Online_Learning.Repositories.Interfaces
 {
 	public interface ICourseRepository
 	{
 		// USER - start
 		// haipdhe
-		IEnumerable<Models.DTOs.Response.User.CourseResponseDto> GetAllCourse();
-		Models.DTOs.Response.User.CourseResponseDto GetCourseById(string id);
+		Task<IEnumerable<Models.DTOs.Response.User.CourseResponseDTO>> GetAllCourseAsync();
+		Task<Models.DTOs.Response.User.CourseResponseDTO> GetCourseByIdAsync(string id);
+		Task<IEnumerable<Models.DTOs.Response.User.CourseProgressResponseDTO>> GetCourseByUserIdAsync(string userId);
+		void UpdateLessonProgress(string userId, long lessonId);
 		// USER - end
 	}
 }

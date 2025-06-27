@@ -4,7 +4,9 @@ namespace Online_Learning.Services.Interfaces
 {
 	public interface ICourseService
 	{
-		IEnumerable<CourseResponseDto> GetAllCourse();
-		CourseResponseDto GetCourseById(string id);
+		Task<IEnumerable<CourseResponseDTO>> GetAllCourseAsync();
+		Task<CourseResponseDTO> GetCourseByIdAsync(string id);
+		Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId);
+		void UpdateLessonProgress(string userId, long lessonId);
 	}
 }
