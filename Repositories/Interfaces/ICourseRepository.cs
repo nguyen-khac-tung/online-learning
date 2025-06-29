@@ -1,5 +1,6 @@
-﻿
-using Online_Learning.Models.DTOs.Response.User;
+﻿using Online_Learning.Models.DTOs.Response.User;
+using Online_Learning.Models.DTOs.Response.Common;
+using Online_Learning.Models.DTOs.Request.User;
 
 namespace Online_Learning.Repositories.Interfaces
 {
@@ -8,6 +9,7 @@ namespace Online_Learning.Repositories.Interfaces
 		// USER - start
 		// haipdhe
 		Task<IEnumerable<Models.DTOs.Response.User.CourseResponseDTO>> GetAllCourseAsync();
+		Task<PaginatedResponse<CourseResponseDTO>> GetCoursesWithFilterAsync(CourseRequestDto request);
 		Task<Models.DTOs.Response.User.CourseResponseDTO> GetCourseByIdAsync(string id);
 		Task<IEnumerable<Models.DTOs.Response.User.CourseProgressResponseDTO>> GetCourseByUserIdAsync(string userId);
 		void UpdateLessonProgress(string userId, long lessonId);

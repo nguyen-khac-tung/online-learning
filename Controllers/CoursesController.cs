@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Online_Learning.Models.DTOs.Response.Common;
 using Online_Learning.Models.DTOs.Response.User;
+using Online_Learning.Models.DTOs.Request.User;
 using Online_Learning.Models.Entities;
 using Online_Learning.Services.Interfaces;
 using System.Runtime.CompilerServices;
@@ -19,20 +20,21 @@ namespace Online_Learning.Controllers
 		}
 
 		/// <summary>
-		/// Get list of all courses (accessible by guest or user)
+		/// Get list of courses with filter, search, sort and pagination (accessible by guest or user)
 		/// </summary>
+		/// <param name="request">Filter parameters</param>
 		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<CourseResponseDTO>>> GetAllCoursesAsync()
+		[HttpGet("filter")]
+		public async Task<ActionResult<PaginatedResponse<CourseResponseDTO>>> GetCoursesWithFilterAsync([FromQuery] CourseRequestDto request)
 		{
-			var courses = await _courseService.GetAllCourseAsync();
+			var result = await _courseService.GetCoursesWithFilterAsync(request);
 
-			if (courses == null || !courses.Any())
+			if (result == null || !result.DataPaginated.Any())
 			{
-				return NotFound(ApiResponse<IEnumerable<CourseResponseDTO>>.NotFoundResponse("No courses found"));
+				return NotFound(ApiResponse<PaginatedResponse<CourseResponseDTO>>.NotFoundResponse("No courses found"));
 			}
 
-			return Ok(ApiResponse<IEnumerable<CourseResponseDTO>>.SuccessResponse(courses, "Courses retrieved successfully"));
+			return Ok(ApiResponse<PaginatedResponse<CourseResponseDTO>>.SuccessResponse(result, "Courses retrieved successfully"));
 		}
 
 		/// <summary>
@@ -59,7 +61,7 @@ namespace Online_Learning.Controllers
 		/// <param name="userId">User ID</param>
 		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
 		[HttpGet("my-learning")]
-		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery]string userId)
+		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery] string userId)
 		{
 			var courses = await _courseService.GetCourseProgressByUserIdAsync(userId);
 			if (courses == null || !courses.Any())
