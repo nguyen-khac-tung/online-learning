@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Online_Learning.Models.Entities;
 
 public partial class CourseImage
 {
-    public long ImageId { get; set; }
+    [Key]
+    public long ImageID { get; set; }
 
-    public string ImageUrl { get; set; } = null!;
+    [Required]
+    public string ImageUrl { get; set; } = string.Empty;
 
-    public string CourseId { get; set; } = null!;
+    [Required]
+    public string CourseID { get; set; } = string.Empty;
 
     public virtual Course Course { get; set; } = null!;
 }
