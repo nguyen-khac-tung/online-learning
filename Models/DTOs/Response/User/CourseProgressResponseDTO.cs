@@ -9,8 +9,6 @@ namespace Online_Learning.Models.DTOs.Response.User
 
 		public string CourseName { get; set; } = null!;
 
-		public CourseStatus Status { get; set; }
-
 		public string CourseImgUrl { get; set; } = null!;
 
 		public int PercentCompleted { get; set; } = 0;

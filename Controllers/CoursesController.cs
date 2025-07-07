@@ -28,12 +28,6 @@ namespace Online_Learning.Controllers
 		public async Task<ActionResult<PaginatedResponse<CourseResponseDTO>>> GetCoursesWithFilterAsync([FromQuery] CourseRequestDto request)
 		{
 			var result = await _courseService.GetCoursesWithFilterAsync(request);
-
-			if (result == null || !result.DataPaginated.Any())
-			{
-				return NotFound(ApiResponse<PaginatedResponse<CourseResponseDTO>>.NotFoundResponse("No courses found"));
-			}
-
 			return Ok(ApiResponse<PaginatedResponse<CourseResponseDTO>>.SuccessResponse(result, "Courses retrieved successfully"));
 		}
 
@@ -61,14 +55,9 @@ namespace Online_Learning.Controllers
 		/// <param name="userId">User ID</param>
 		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
 		[HttpGet("my-learning")]
-		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery] string userId)
+		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery] string userId, [FromQuery] string? progress)
 		{
-			var courses = await _courseService.GetCourseProgressByUserIdAsync(userId);
-			if (courses == null || !courses.Any())
-			{
-				return NotFound(ApiResponse<IEnumerable<CourseProgressResponseDTO>>.NotFoundResponse("No courses found"));
-			}
-
+			var courses = await _courseService.GetCourseProgressByUserIdAsync(userId, progress);
 			return Ok(ApiResponse<IEnumerable<CourseProgressResponseDTO>>.SuccessResponse(courses, "Courses retrieved successfully"));
 		}
 

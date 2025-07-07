@@ -28,9 +28,9 @@ namespace Online_Learning.Services.Implementations
 			return await _courseRepository.GetCourseByIdAsync(id);
 		}
 
-		public async Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId)
+		public async Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId,string? progress)
 		{
-			return await _courseRepository.GetCourseByUserIdAsync(userId);
+			return await _courseRepository.GetCourseByUserIdAsync(userId, progress);
 		}
 
 		public void UpdateLessonProgress(string userId, long lessonId)

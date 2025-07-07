@@ -58,16 +58,16 @@ namespace Online_Learning.Repositories.Implementations
 			}
 
 			// Filter theo Level
-			if (request.LevelId.HasValue)
-			{
-				query = query.Where(c => c.LevelId == request.LevelId.Value);
-			}
+			//if (request.LevelId.HasValue)
+			//{
+			//	query = query.Where(c => c.LevelId == request.LevelId.Value);
+			//}
 
 			// Filter theo Language
-			if (request.LanguageId.HasValue)
-			{
-				query = query.Where(c => c.LanguageId == request.LanguageId.Value);
-			}
+			//if (request.LanguageId.HasValue)
+			//{
+			//	query = query.Where(c => c.LanguageId == request.LanguageId.Value);
+			//}
 
 			// Filter theo Category
 			if (request.CategoryIds != null && request.CategoryIds.Any())
@@ -170,19 +170,45 @@ namespace Online_Learning.Repositories.Implementations
 		}
 
 		// MY LEARNING - GET COURSE BY USER ID (haipdhe172178)
-		public async Task<IEnumerable<CourseProgressResponseDTO>> GetCourseByUserIdAsync(string userId)
+		public async Task<IEnumerable<CourseProgressResponseDTO>> GetCourseByUserIdAsync(string userId, string? progress)
 		{
 			if (string.IsNullOrEmpty(userId))
 			{
 				return Enumerable.Empty<CourseProgressResponseDTO>();
 			}
-			var courseEnrollment = await _context.CourseEnrollments
-										.Include(c => c.Course)
-										.Where(c => c.UserId.Equals(userId))
-										.Select(c => new CourseProgressResponseDTO(c.Course, c.Progress))
-										.ToListAsync();
-			return courseEnrollment;
+
+			// Bắt đầu query
+			var query = _context.CourseEnrollments
+								.Include(c => c.Course)
+								.Where(c => c.UserId == userId);
+
+			// Gắn điều kiện theo status
+			if (!string.IsNullOrEmpty(progress))
+			{
+				switch (progress.ToLower())
+				{
+					case "in-progress":
+						query = query.Where(c => c.Progress < 100);
+						break;
+					case "completed":
+						query = query.Where(c => c.Progress >= 100);
+						break;
+				}
+			}
+			else
+			{
+				//default 
+				query = query.Where(c => c.Progress < 100);
+			}
+
+			// Dựng kết quả
+			var result = await query
+				.Select(c => new CourseProgressResponseDTO(c.Course, c.Progress))
+				.ToListAsync();
+
+			return result;
 		}
+
 
 		public void UpdateLessonProgress(string userId, long lessonId)
 		{

@@ -16,6 +16,9 @@ namespace Online_Learning.Configurations
 			services.AddScoped<ICourseRepository, CourseRepository>();
 			services.AddScoped<ICourseService, CourseService>();
 
+			//category
+			services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 		}
 	}
 }
