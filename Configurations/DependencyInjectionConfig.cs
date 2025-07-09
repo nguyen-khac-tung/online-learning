@@ -19,6 +19,11 @@ namespace Online_Learning.Configurations
 			//category
 			services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+			//lesson
+			services.AddScoped<ILesssonRepository, LessonRepository>();
+
+			
+
 		}
 	}
 }

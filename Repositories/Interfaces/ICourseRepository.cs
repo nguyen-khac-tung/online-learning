@@ -12,6 +12,7 @@ namespace Online_Learning.Repositories.Interfaces
 		Task<PaginatedResponse<CourseResponseDTO>> GetCoursesWithFilterAsync(CourseRequestDto request);
 		Task<Models.DTOs.Response.User.CourseResponseDTO> GetCourseByIdAsync(string id);
 		Task<IEnumerable<Models.DTOs.Response.User.CourseProgressResponseDTO>> GetCourseByUserIdAsync(string userId, string? progress);
+		Task<CourseLearningResponseDTO> GetCourseLearningAsync(string courseId,string userId);
 		void UpdateLessonProgress(string userId, long lessonId);
 		// USER - end
 	}

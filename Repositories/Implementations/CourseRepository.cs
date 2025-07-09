@@ -11,9 +11,11 @@ namespace Online_Learning.Repositories.Implementations
 	public class CourseRepository : ICourseRepository
 	{
 		private readonly OnlineLearningContext _context;
-		public CourseRepository(OnlineLearningContext context)
+		private readonly ILesssonRepository _lesssonRepository;
+		public CourseRepository(OnlineLearningContext context, ILesssonRepository lesssonRepository)
 		{
 			_context = context;
+			_lesssonRepository = lesssonRepository;
 		}
 		// USER - GET COURSE LIST (haipdhe172178)
 		public async Task<IEnumerable<Models.DTOs.Response.User.CourseResponseDTO>> GetAllCourseAsync()
@@ -56,18 +58,6 @@ namespace Online_Learning.Repositories.Implementations
 				var searchTerm = request.SearchTerm.ToLower();
 				query = query.Where(c => c.CourseName.ToLower().Contains(searchTerm));
 			}
-
-			// Filter theo Level
-			//if (request.LevelId.HasValue)
-			//{
-			//	query = query.Where(c => c.LevelId == request.LevelId.Value);
-			//}
-
-			// Filter theo Language
-			//if (request.LanguageId.HasValue)
-			//{
-			//	query = query.Where(c => c.LanguageId == request.LanguageId.Value);
-			//}
 
 			// Filter theo Category
 			if (request.CategoryIds != null && request.CategoryIds.Any())
@@ -207,6 +197,75 @@ namespace Online_Learning.Repositories.Implementations
 				.ToListAsync();
 
 			return result;
+		}
+
+		// USER - GET COURSE INFO FOR LEARNING FEATURE (haipdhe172178)
+		public async Task<CourseLearningResponseDTO> GetCourseLearningAsync(string courseId, string userId)
+		{
+			if (string.IsNullOrEmpty(courseId))
+			{
+				return null;
+			}
+
+			var obj = await _context.Courses
+				.Include(c => c.Modules)
+					.ThenInclude(m => m.Lessons)
+				.Include(c => c.Modules)
+					.ThenInclude(m => m.Quizzes)
+				.Include(c => c.CourseEnrollments)
+				.Where(x => x.CourseId == courseId && x.Status == (int)CourseStatus.Published)
+				.Select(course => new CourseLearningResponseDTO
+				{
+					CourseId = course.CourseId,
+					CourseName = course.CourseName,
+					Modules = course.Modules
+									.Where(m => m.Status == (int)ModuleStatus.Active)
+									.OrderBy(m => m.ModuleNumber)
+									.Select(m => new ModuleResponseDTO
+									{
+										ModuleId = m.ModuleId,
+										ModuleName = m.ModuleName,
+										ModuleNumber = m.ModuleNumber,
+										Lessons = m.Lessons
+											.Where(l => l.Status == (int)LessonStatus.Active)
+											.Select(l => new LessonResponseDTO
+											{
+												LessonId = l.LessonId,
+												LessonName = l.LessonName,
+												LessonNumber = l.LessonNumber,
+												urlVideo = l.LessonVideo,
+												Duration = l.Duration
+											})
+											.OrderBy(l => l.LessonNumber)
+											.ToList(),
+										Quizzes = m.Quizzes
+													.Where(q => q.Status == (int)QuizStatus.Active)
+													.Select(q => new QuizResponseDTO
+													{
+														QuizId = q.QuizId,
+														QuizName = q.QuizName,
+														QuizTime = q.QuizTime,
+														TotalQuestions = q.TotalQuestions,
+														PassScore = q.PassScore
+													})
+													.ToList()
+									})
+									.ToList(),
+					LessonQuantity = course.Modules
+											.Where(m => m.Status == (int)ModuleStatus.Active)
+											.SelectMany(m => m.Lessons)
+											.Where(l => l.Status == (int)LessonStatus.Active)
+											.Count(),
+					Progress = course.CourseEnrollments
+									.Where(e => e.UserId == userId)
+									.Select(e => e.Progress)
+									.FirstOrDefault()
+				}).FirstOrDefaultAsync();
+			obj.LessonIdCompleted = _context.LessonProgresses
+											.Where(lp => lp.UserId == userId)
+											.Select(lp => lp.LessonId)
+											.ToList();
+			return obj;
 		}
 
 

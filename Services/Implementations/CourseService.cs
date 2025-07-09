@@ -9,9 +9,11 @@ namespace Online_Learning.Services.Implementations
 	public class CourseService : ICourseService
 	{
 		private readonly ICourseRepository _courseRepository;
-		public CourseService(ICourseRepository courseRepository)
+		private readonly ILesssonRepository _lesssonRepository;
+		public CourseService(ICourseRepository courseRepository, ILesssonRepository lesssonRepository)
 		{
 			_courseRepository = courseRepository;
+			_lesssonRepository = lesssonRepository;
 		}
 		public async Task<IEnumerable<CourseResponseDTO>> GetAllCourseAsync()
 		{
@@ -28,7 +30,7 @@ namespace Online_Learning.Services.Implementations
 			return await _courseRepository.GetCourseByIdAsync(id);
 		}
 
-		public async Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId,string? progress)
+		public async Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId, string? progress)
 		{
 			return await _courseRepository.GetCourseByUserIdAsync(userId, progress);
 		}
@@ -37,5 +39,11 @@ namespace Online_Learning.Services.Implementations
 		{
 			_courseRepository.UpdateLessonProgress(userId, lessonId);
 		}
+
+		public async Task<CourseLearningResponseDTO> GetCourseLearningAsync(string courseId, string userId)
+		{
+			return await _courseRepository.GetCourseLearningAsync(courseId, userId);
+		}
+
 	}
 }

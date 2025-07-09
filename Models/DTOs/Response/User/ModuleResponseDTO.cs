@@ -12,10 +12,6 @@ namespace Online_Learning.Models.DTOs.Response.User
 
 		public int ModuleNumber { get; set; }
 
-		public ModuleStatus Status { get; set; }
-
-		public string StatusName => Status.ToString();
-
 		public List<LessonResponseDTO> Lessons { get; set; } = new List<LessonResponseDTO>();
 
 		public List<QuizResponseDTO> Quizzes { get; set; } = new List<QuizResponseDTO>();
@@ -25,7 +21,6 @@ namespace Online_Learning.Models.DTOs.Response.User
 			ModuleId = module.ModuleId;
 			ModuleName = module.ModuleName;
 			ModuleNumber = module.ModuleNumber;
-			Status = (ModuleStatus)module.Status;
 
 			// Map Lessons
 			if (module.Lessons != null)
@@ -37,14 +32,11 @@ namespace Online_Learning.Models.DTOs.Response.User
 					.ToList();
 			}
 
-			// Map Quizzes
-			if (module.Quizzes != null)
-			{
-				Quizzes = module.Quizzes
-					.Where(q => q.Status == (int)QuizStatus.Active)
-					.Select(q => new QuizResponseDTO(q))
-					.ToList();
-			}
+			
 		}
-	}
+        public ModuleResponseDTO()
+        {
+            
+        }
+    }
 }

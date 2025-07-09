@@ -68,12 +68,29 @@ namespace Online_Learning.Controllers
 		/// <param name="lessonId">Lesson ID</param>
 		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
 		[HttpPost("mark-as-completed")]
-		public async Task<ActionResult> UpdateProgressLesson(string userId, long lessonId)
+		public async Task<ActionResult> UpdateProgressLesson([FromBody]long lessonId)
 		{
-			_courseService.UpdateLessonProgress(userId, lessonId);
+			_courseService.UpdateLessonProgress("U07de5297                           ", lessonId);
 			return Ok(ApiResponse<string>.SuccessResponse(null, "Lesson marked as completed"));
 		}
 
+		/// <summary>
+		/// Get course for learning (accessible by user)
+		/// </summary>
+		/// <param name="courseId">Course ID</param>
+		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+		[HttpGet("learning/{courseId}")]
+		public async Task<ActionResult<CourseLearningResponseDTO>> GetCourseLearningAsync(string courseId)
+		{
+			var course = await _courseService.GetCourseLearningAsync(courseId, "U07de5297                           ");
+
+			if (course == null)
+			{
+				return NotFound(ApiResponse<IEnumerable<CourseLearningResponseDTO>>.NotFoundResponse("No courses found"));
+			}
+
+			return Ok(ApiResponse<CourseLearningResponseDTO>.SuccessResponse(course, "Courses retrieved successfully"));
+		}
 
 	}
 }

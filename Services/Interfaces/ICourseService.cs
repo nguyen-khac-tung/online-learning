@@ -9,6 +9,7 @@ namespace Online_Learning.Services.Interfaces
 		Task<IEnumerable<CourseResponseDTO>> GetAllCourseAsync();
 		Task<PaginatedResponse<CourseResponseDTO>> GetCoursesWithFilterAsync(CourseRequestDto request);
 		Task<CourseResponseDTO> GetCourseByIdAsync(string id);
+		Task<CourseLearningResponseDTO> GetCourseLearningAsync(string courseId, string userId);
 		Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId, string? progress);
 		void UpdateLessonProgress(string userId, long lessonId);
 	}

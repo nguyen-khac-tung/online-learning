@@ -1,0 +1,44 @@
+### Quiz API Tests
+
+### 1. Get Quiz by ID
+GET {{baseUrl}}/api/quiz/1
+Authorization: Bearer {{token}}
+
+### 2. Get Quizzes by Module
+GET {{baseUrl}}/api/quiz/module/1
+Authorization: Bearer {{token}}
+
+### 3. Submit Quiz
+POST {{baseUrl}}/api/quiz/submit
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "quizId": 1,
+  "answers": [
+    {
+      "questionId": 1,
+      "optionId": 1
+    },
+    {
+      "questionId": 2,
+      "optionId": 5
+    },
+    {
+      "questionId": 3,
+      "optionId": 9
+    }
+  ]
+}
+
+### 4. Get Quiz Result
+GET {{baseUrl}}/api/quiz/result/1
+Authorization: Bearer {{token}}
+
+### 5. Get User Quiz Results
+GET {{baseUrl}}/api/quiz/results
+Authorization: Bearer {{token}}
+
+### 6. Check Quiz Completion
+GET {{baseUrl}}/api/quiz/completed/1
+Authorization: Bearer {{token}} 
