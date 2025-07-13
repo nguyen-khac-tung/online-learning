@@ -12,5 +12,7 @@ namespace Online_Learning.Services.Interfaces
 		Task<CourseLearningResponseDTO> GetCourseLearningAsync(string courseId, string userId);
 		Task<IEnumerable<CourseProgressResponseDTO>> GetCourseProgressByUserIdAsync(string userId, string? progress);
 		void UpdateLessonProgress(string userId, long lessonId);
-	}
+        Task<bool> CheckEnrollmentAsync(string userId, string courseId);
+        Task<bool> UpdateQuizProgressAsync(string userId, long quizId);
+    }
 }
