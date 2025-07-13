@@ -6,6 +6,7 @@ using Online_Learning.Models.DTOs.Request.User;
 using Online_Learning.Models.Entities;
 using Online_Learning.Services.Interfaces;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Online_Learning.Controllers
 {
@@ -49,12 +50,13 @@ namespace Online_Learning.Controllers
 			return Ok(ApiResponse<CourseResponseDTO>.SuccessResponse(course, "Courses retrieved successfully"));
 		}
 
-		/// <summary>
-		/// Get course in my learning by UserID (accessible by user)
-		/// </summary>
-		/// <param name="userId">User ID</param>
-		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
-		[HttpGet("my-learning")]
+        /// <summary>
+        /// Get course in my learning by UserID (accessible by user)
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+        // [Authorize(Roles ="Mentee")]	
+        [HttpGet("my-learning")]
 		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery] string userId, [FromQuery] string? progress)
 		{
 			var courses = await _courseService.GetCourseProgressByUserIdAsync(userId, progress);
@@ -67,6 +69,7 @@ namespace Online_Learning.Controllers
 		/// <param name="userId">User ID</param>
 		/// <param name="lessonId">Lesson ID</param>
 		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+		// [Authorize(Roles ="Mentee")]		
 		[HttpPost("mark-as-completed")]
 		public async Task<ActionResult> UpdateProgressLesson([FromBody]long lessonId)
 		{
@@ -74,12 +77,13 @@ namespace Online_Learning.Controllers
 			return Ok(ApiResponse<string>.SuccessResponse(null, "Lesson marked as completed"));
 		}
 
-		/// <summary>
-		/// Get course for learning (accessible by user)
-		/// </summary>
-		/// <param name="courseId">Course ID</param>
-		/// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
-		[HttpGet("learning/{courseId}")]
+        /// <summary>
+        /// Get course for learning (accessible by user)
+        /// </summary>
+        /// <param name="courseId">Course ID</param>
+        /// <remarks>Author: HaiPDHE172178 | Role: USER</remarks>
+        // [Authorize(Roles ="Mentee")]
+        [HttpGet("learning/{courseId}")]
 		public async Task<ActionResult<CourseLearningResponseDTO>> GetCourseLearningAsync(string courseId)
 		{
 			var course = await _courseService.GetCourseLearningAsync(courseId, "U07de5297                           ");
