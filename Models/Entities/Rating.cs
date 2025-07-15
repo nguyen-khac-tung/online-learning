@@ -5,15 +5,21 @@ using System.Collections.Generic;
 
 namespace Online_Learning.Models.Entities;
 
-public partial class UserCertificate
+public partial class Rating
 {
-    public int CertificateId { get; set; }
-
-    public string UserId { get; set; }
+    public long RatingId { get; set; }
 
     public string CourseId { get; set; }
 
+    public string UserId { get; set; }
+
+    public byte Score { get; set; }
+
+    public string ReviewText { get; set; }
+
     public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual Course Course { get; set; }
 

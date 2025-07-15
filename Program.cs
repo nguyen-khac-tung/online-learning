@@ -1,15 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Online_Learning.Configurations;
+using Online_Learning.Models.DTOs.Response.Auth;
 using Online_Learning.Models.Entities;
-using Online_Learning.Repositories.Implementations;
-using Online_Learning.Repositories.Interfaces;
-using Online_Learning.Services.Implementations;
-using Online_Learning.Services.Interfaces;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<OnlineLearningContext>(option => option.UseSqlServer(
+        builder.Configuration.GetConnectionString("MyCnn")
+    ));
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options =>
@@ -17,15 +21,28 @@ builder.Services.AddControllers()
 		// convert value cua enum
 		options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 	});
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options =>
+	{
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+			ValidIssuer = builder.Configuration["Jwt:Issuer"],
+			ValidAudience = builder.Configuration["Jwt:Audience"],
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+		};
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<OnlineLearningContext>(option => option.UseSqlServer(
-		builder.Configuration.GetConnectionString("MyCnn")
-	));
 builder.Services.AddCors();
 
-// Cấu hình DI
+
+// DI Configuration
 builder.Services.AddDependencyInjectionConfiguration(builder.Configuration);
 
 var app = builder.Build();

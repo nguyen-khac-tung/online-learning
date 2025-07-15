@@ -5,13 +5,11 @@ using System.Collections.Generic;
 
 namespace Online_Learning.Models.Entities;
 
-public partial class CourseImage
+public partial class Function
 {
-    public long ImageId { get; set; }
+    public long FunctionId { get; set; }
 
-    public string ImageUrl { get; set; }
+    public string ApiUrl { get; set; }
 
-    public string CourseId { get; set; }
-
-    public virtual Course Course { get; set; }
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }

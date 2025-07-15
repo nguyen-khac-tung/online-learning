@@ -19,5 +19,25 @@ namespace Online_Learning.Controllers
 		{
 			return _context.Roles.ToList();
 		}
+
+        //[DynamicAuthorize]
+        //[HttpGet("Test/{mess}")]
+        //public IActionResult Test(string mess)
+        //{
+        //    return Ok(ApiResponse<string>.SuccessResponse(mess));
+        //}
+
+
+
+        //Man login, register, logout.. 
+
+        //Man phan quyen
+
+        //Man Profile
+
+
+        //Login/Register google
+
+        //Profle Image
     }
 }

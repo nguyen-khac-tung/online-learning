@@ -5,17 +5,15 @@ using System.Collections.Generic;
 
 namespace Online_Learning.Models.Entities;
 
-public partial class UserAnswer
+public partial class UserOtp
 {
-    public long UserAnswerId { get; set; }
+    public string Email { get; set; }
 
-    public string UserId { get; set; }
+    public string OtpCode { get; set; }
 
-    public long OptionId { get; set; }
+    public DateTime ExpiresAt { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
-    public virtual Option Option { get; set; }
-
-    public virtual User User { get; set; }
+    public DateTime? UsedAt { get; set; }
 }
