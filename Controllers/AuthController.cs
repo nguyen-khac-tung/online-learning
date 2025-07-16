@@ -23,10 +23,10 @@ namespace Online_Learning.Controllers
         [HttpPost("Login")]
         public IActionResult Login(UserLogin userLogin)
         {
-            string msg = _iAuthService.DoLogin(userLogin, out JwtResponse jwt);
+            string msg = _iAuthService.DoLogin(userLogin, out AuthResponseDto auth);
             if(msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<JwtResponse>.SuccessResponse(jwt));
+            return Ok(ApiResponse<AuthResponseDto>.SuccessResponse(auth));
         }
 
         [HttpPost("Register")]
@@ -35,16 +35,16 @@ namespace Online_Learning.Controllers
             string msg = _iAuthService.RequestRegistrationOtp(request);
             if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<string>.SuccessResponse("OTP has been sent to your email."));
+            return Ok(ApiResponse<string>.SuccessResponse("","OTP sent to your email!"));
         }
 
         [HttpPost("VerifyRegister")]
         public IActionResult VerifyRegister(VerifyRegisterRequest request)
         {
-            string msg = _iAuthService.VerifyRegistration(request, out JwtResponse jwt);
+            string msg = _iAuthService.VerifyRegistration(request, out AuthResponseDto auth);
             if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<JwtResponse>.SuccessResponse(jwt, "Account created successfully."));
+            return Ok(ApiResponse<AuthResponseDto>.SuccessResponse(auth, "Account created successfully."));
         }
 
         [HttpPost("ForgotPassword")]
@@ -53,7 +53,7 @@ namespace Online_Learning.Controllers
             string msg = _iAuthService.RequestForgotPasswordOtp(request);
             if (msg.Length > 0)return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<string>.SuccessResponse("OTP has been sent to your email."));
+            return Ok(ApiResponse<string>.SuccessResponse("","OTP sent to your email!"));
         }
 
         [HttpPost("VerifyForgotPassword")]
@@ -62,7 +62,7 @@ namespace Online_Learning.Controllers
             string msg = _iAuthService.VerifyForgotPassword(request);
             if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<string>.SuccessResponse("OTP is valid. You can now change your password."));
+            return Ok(ApiResponse<string>.SuccessResponse("", "OTP verified successfully."));
         }
 
         [HttpPost("ChangePassword")]
@@ -71,7 +71,7 @@ namespace Online_Learning.Controllers
             string msg = _iAuthService.ChangePassword(request);
             if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<string>.SuccessResponse("Your password has been changed successfully."));
+            return Ok(ApiResponse<string>.SuccessResponse("", "Password changed successfully."));
         }
 
         [HttpPost("SendOtp")]
@@ -80,7 +80,7 @@ namespace Online_Learning.Controllers
             string msg = _iAuthService.SendOtp(request.Email);
             if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<string>.SuccessResponse("A new OTP has been sent to your email."));
+            return Ok(ApiResponse<string>.SuccessResponse("", "A new OTP sent to your email."));
         }
 
     }

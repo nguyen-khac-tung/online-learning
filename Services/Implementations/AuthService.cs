@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Online_Learning.Constants.Enums;
 using Online_Learning.Models.DTOs.Request.Auth;
 using Online_Learning.Models.DTOs.Response.Auth;
+using Online_Learning.Models.DTOs.Response.User;
 using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Implementations;
 using Online_Learning.Repositories.Interfaces;
@@ -34,9 +35,9 @@ namespace Online_Learning.Services.Implementations
             _iEmailService = emailService;
         }
 
-        public string DoLogin(UserLogin userLogin, out JwtResponse jwt)
+        public string DoLogin(UserLogin userLogin, out AuthResponseDto auth)
         {
-            jwt = new JwtResponse();
+            auth = new AuthResponseDto();
 
             var user = _iUserRepository.GetUserByEmail(userLogin.Email);
             if (user == null) return "Username or password is incorrect";
@@ -46,7 +47,14 @@ namespace Online_Learning.Services.Implementations
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(userLogin.Password, user.Password);
             if (!isPasswordCorrect) return "Username or password is incorrect";
 
-            jwt.Token = GenerateJwtToken(user);
+            auth.Token = GenerateJwtToken(user);
+            auth.User = new UserDto()
+            {
+                UserId = user.UserId,
+                Email = user.Email,
+                FullName = user.FullName,
+                AvatarUrl = user.AvatarUrl
+            };
 
             return "";
         }
@@ -62,9 +70,9 @@ namespace Online_Learning.Services.Implementations
             return "";
         }
 
-        public string VerifyRegistration(VerifyRegisterRequest request, out JwtResponse jwt)
+        public string VerifyRegistration(VerifyRegisterRequest request, out AuthResponseDto auth)
         {
-            jwt = new JwtResponse();
+            auth = new AuthResponseDto();
 
             var msg = VerfifyOtpCode(request.Email, request.OtpCode, out UserOtp userOtp);
             if(msg.Length > 0) return msg;
@@ -90,7 +98,15 @@ namespace Online_Learning.Services.Implementations
 
             _iUserRepository.SaveChanges();
 
-            jwt.Token = GenerateJwtToken(newUser);
+            auth.Token = GenerateJwtToken(newUser);
+            auth.User = new UserDto()
+            {
+                UserId = newUser.UserId,
+                Email = newUser.Email,
+                FullName = newUser.FullName,
+                AvatarUrl = newUser.AvatarUrl
+            };
+
             return "";
         }
 

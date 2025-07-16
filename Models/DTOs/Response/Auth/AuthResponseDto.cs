@@ -1,9 +1,13 @@
-﻿namespace Online_Learning.Models.DTOs.Response.Auth
+﻿using Online_Learning.Models.DTOs.Response.User;
+
+namespace Online_Learning.Models.DTOs.Response.Auth
 {
-    public class JwtResponse
+    public class AuthResponseDto
     {
         public string Token { get; set; }
 
-        public JwtResponse() { }
+        public UserDto User { get; set; }
+
+        public AuthResponseDto() { }
     }
 }

@@ -78,6 +78,6 @@ namespace Online_Learning.Models.DTOs.Request.Auth
 
         [Required(ErrorMessage = "Comfirm New Password cannot be empty")]
         [Compare("NewPassword", ErrorMessage = "Confirm New Password must match the New Password")]
-        public string ComfirmNewPassword { get; set; }
+        public string ConfirmNewPassword { get; set; }
     }
 }

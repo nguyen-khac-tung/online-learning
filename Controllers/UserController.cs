@@ -35,7 +35,7 @@ namespace Online_Learning.Controllers
             string msg = _userService.UpdateUserProfile(User, request);
             if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
 
-            return Ok(ApiResponse<string>.SuccessResponse("Profile updated successfully."));
+            return Ok(ApiResponse<string>.SuccessResponse("", "Profile updated successfully."));
         }
     }
 }
