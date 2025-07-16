@@ -318,7 +318,7 @@ public partial class OnlineLearningContext : DbContext
         modelBuilder.Entity<Lesson>(entity =>
         {
             entity.Property(e => e.LessonId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("LessonID");
             entity.Property(e => e.LessonName)
                 .IsRequired()
@@ -365,7 +365,7 @@ public partial class OnlineLearningContext : DbContext
         modelBuilder.Entity<Module>(entity =>
         {
             entity.Property(e => e.ModuleId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("ModuleID");
             entity.Property(e => e.CourseId)
                 .IsRequired()
@@ -386,7 +386,7 @@ public partial class OnlineLearningContext : DbContext
         modelBuilder.Entity<Option>(entity =>
         {
             entity.Property(e => e.OptionId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("OptionID");
             entity.Property(e => e.Content)
                 .IsRequired()
@@ -454,7 +454,7 @@ public partial class OnlineLearningContext : DbContext
         modelBuilder.Entity<Question>(entity =>
         {
             entity.Property(e => e.QuestionId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("QuestionID");
             entity.Property(e => e.Content)
                 .IsRequired()
@@ -470,7 +470,7 @@ public partial class OnlineLearningContext : DbContext
         modelBuilder.Entity<Quiz>(entity =>
         {
             entity.Property(e => e.QuizId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("QuizID");
             entity.Property(e => e.ModuleId).HasColumnName("ModuleID");
             entity.Property(e => e.QuizName)
