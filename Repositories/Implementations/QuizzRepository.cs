@@ -105,5 +105,11 @@ namespace Online_Learning.Repositories.Implementations
 
             return true;
         }
+
+        public async Task UpdateUserQuizResultAsync(UserQuizResult userQuizResult)
+        {
+            _context.UserQuizResults.Update(userQuizResult);
+            await _context.SaveChangesAsync();
+        }
     }
 }

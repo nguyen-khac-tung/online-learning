@@ -10,6 +10,7 @@ namespace Online_Learning.Repositories.Interfaces
         Task<IEnumerable<Quiz>> GetQuizzesByModuleAsync(long moduleId);
         Task<UserQuizResult?> GetUserQuizResultAsync(string userId, long quizId);
         Task<UserQuizResult> CreateUserQuizResultAsync(UserQuizResult userQuizResult);
+        Task UpdateUserQuizResultAsync(UserQuizResult userQuizResult);
         Task<IEnumerable<UserQuizResult>> GetUserQuizResultsAsync(string userId);
         Task<bool> IsQuizCompletedAsync(string userId, long quizId);
         Task<Quiz?> GetQuizWithQuestionsAndOptionsAsync(long quizId);

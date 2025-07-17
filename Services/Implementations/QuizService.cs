@@ -72,11 +72,18 @@ namespace Online_Learning.Services.Implementations
 
         public async Task<QuizResultResponseDTO> SubmitQuizAsync(QuizRequestDto request, string userId)
         {
-            // Kiểm tra quiz đã được làm chưa
-            var existingResult = await _quizRepository.GetUserQuizResultAsync(userId, request.QuizId);
-            if (existingResult != null)
+            // Lấy quiz và questions để tính điểm
+            var quiz = await _quizRepository.GetQuizWithQuestionsAndOptionsAsync(request.QuizId);
+            if (quiz == null)
             {
-                throw new InvalidOperationException("Quiz đã được làm trước đó");
+                throw new InvalidOperationException("Quiz không tồn tại");
+            }
+
+            // Kiểm tra quiz đã được làm chưa và đã pass chưa
+            var existingResult = await _quizRepository.GetUserQuizResultAsync(userId, request.QuizId);
+            if (existingResult != null && (quiz.PassScore == null || existingResult.Score >= quiz.PassScore))
+            {
+                throw new InvalidOperationException("Quiz đã được làm và đã pass trước đó");
             }
 
             // Validate submission
@@ -84,13 +91,6 @@ namespace Online_Learning.Services.Implementations
             if (!isValid)
             {
                 throw new InvalidOperationException("Dữ liệu nộp bài không hợp lệ");
-            }
-
-            // Lấy quiz và questions để tính điểm
-            var quiz = await _quizRepository.GetQuizWithQuestionsAndOptionsAsync(request.QuizId);
-            if (quiz == null)
-            {
-                throw new InvalidOperationException("Quiz không tồn tại");
             }
 
             var startTime = DateTime.UtcNow;
@@ -127,20 +127,34 @@ namespace Online_Learning.Services.Implementations
             var score = totalQuestions > 0 ? (decimal)correctAnswers / totalQuestions * 100 : 0;
             var isPassed = quiz.PassScore == null || score >= quiz.PassScore;
 
-            // Tạo UserQuizResult
-            var userQuizResult = new UserQuizResult
+            UserQuizResult userQuizResult;
+            if (existingResult != null)
             {
-                UserId = userId,
-                QuizId = request.QuizId,
-                Score = score,
-                CorrectAnswers = correctAnswers,
-                StartTime = startTime,
-                EndTime = endTime,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            await _quizRepository.CreateUserQuizResultAsync(userQuizResult);
+                // update kết quả cũ
+                existingResult.Score = score;
+                existingResult.CorrectAnswers = correctAnswers;
+                existingResult.StartTime = startTime;
+                existingResult.EndTime = endTime;
+                existingResult.UpdatedAt = DateTime.UtcNow;
+                // Gọi repository để update
+                await _quizRepository.UpdateUserQuizResultAsync(existingResult);
+                userQuizResult = existingResult;
+            }
+            else
+            {
+                userQuizResult = new UserQuizResult
+                {
+                    UserId = userId,
+                    QuizId = request.QuizId,
+                    Score = score,
+                    CorrectAnswers = correctAnswers,
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                await _quizRepository.CreateUserQuizResultAsync(userQuizResult);
+            }
 
             // Nếu pass thì cập nhật tiến độ
             if (isPassed)
