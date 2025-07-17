@@ -289,7 +289,7 @@ namespace Online_Learning.Repositories.Implementations
                 .FirstOrDefault(l => l.LessonId == lessonId);
 
             // Cập nhật Progress trong CourseEnrollment
-            UpdateCourseProgress(userId, lesson.Module.CourseId);
+            UpdateCourseProgress(userId, lesson.Module.Course.CourseId);
 
             _context.SaveChanges();
         }
@@ -326,13 +326,14 @@ namespace Online_Learning.Repositories.Implementations
         private void UpdateCourseProgress(string userId, string courseId)
         {
             var enrollment = _context.CourseEnrollments
-                .FirstOrDefault(e => e.UserId == userId && e.CourseId == courseId);
+                .FirstOrDefault(e => e.UserId.Equals(userId) && e.CourseId.Equals(courseId));
 
             if (enrollment == null) return;
 
             // Tính toán tiến độ mới
             var newProgress = CalculateCourseProgress(userId, courseId);
             enrollment.Progress = newProgress;
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -404,10 +405,17 @@ namespace Online_Learning.Repositories.Implementations
 
             // Tính tiến độ
             var completedItems = completedLessonsInCourse + completedQuizzesInCourse;
-            var progress = (int)completedItems / totalItems * 100;
+            var progress = (int)(Convert.ToDouble(completedItems) / totalItems * 100);
 
             return progress;
         }
 
+        public async Task<int> GetProgressAsync(string userId, string courseId)
+        {
+            var enrollment = await _context.CourseEnrollments
+                .FirstOrDefaultAsync(c => c.UserId.Equals(userId) && c.CourseId.Equals(courseId));
+
+            return enrollment?.Progress ?? 0;
+        }
     }
 }

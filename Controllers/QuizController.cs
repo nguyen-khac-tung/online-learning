@@ -175,7 +175,7 @@ namespace Online_Learning.Controllers
         }
 
         /// <summary>
-        /// Lấy userId từ token (tạm thời return null, cần implement authentication)
+        /// Lấy userId từ token (tạm thời fix cứng, cần implement authentication)
         /// </summary>
         /// <returns>UserId</returns>
         private string GetCurrentUserId()

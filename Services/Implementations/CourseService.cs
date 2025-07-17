@@ -61,5 +61,10 @@ namespace Online_Learning.Services.Implementations
                 return false;
             }
         }
+
+        public async Task<int> GetProgressAsync(string userId, string courseId)
+        {
+            return await _courseRepository.GetProgressAsync(userId, courseId);
+        }
     }
 }

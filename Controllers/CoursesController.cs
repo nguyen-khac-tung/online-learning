@@ -78,8 +78,8 @@ namespace Online_Learning.Controllers
         /// <param name="lessonId">Lesson ID</param>
         /// <remarks>Author: HaiPDHE172178 | Role: STUDENT</remarks>
         // [Authorize(Roles ="Mentee")]		
-        [HttpPost("mark-as-completed")]
-        public async Task<ActionResult> UpdateProgressLesson([FromBody] long lessonId)
+        [HttpPost("mark-as-completed/{lessonId}")]
+        public async Task<ActionResult> UpdateProgressLesson(long lessonId)
         {
             var userId = GetCurrentUserId();
             if (string.IsNullOrEmpty(userId))
@@ -101,11 +101,11 @@ namespace Online_Learning.Controllers
             var userId = GetCurrentUserId();
             if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized(ApiResponse<bool>.ErrorResponse("Chưa đăng nhập"));
+                return Unauthorized(ApiResponse<bool>.ErrorResponse("User is not authenticated"));
             }
 
             var isEnrolled = await _courseService.CheckEnrollmentAsync(userId, courseId);
-            return Ok(ApiResponse<bool>.SuccessResponse(isEnrolled, "Kiểm tra enrollment thành công"));
+            return Ok(ApiResponse<bool>.SuccessResponse(isEnrolled, "Check enrollment successful"));
         }
 
         /// <summary>
@@ -119,16 +119,33 @@ namespace Online_Learning.Controllers
             var userId = GetCurrentUserId();
             if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized(ApiResponse<CourseLearningResponseDTO>.ErrorResponse("Chưa đăng nhập"));
+                return Unauthorized(ApiResponse<CourseLearningResponseDTO>.ErrorResponse("User is not authenticated"));
             }
 
             var courseLearning = await _courseService.GetCourseLearningAsync(courseId, userId);
             if (courseLearning == null)
             {
-                return NotFound(ApiResponse<CourseLearningResponseDTO>.ErrorResponse("Course không tồn tại"));
+                return NotFound(ApiResponse<CourseLearningResponseDTO>.ErrorResponse("Couse not found"));
             }
 
-            return Ok(ApiResponse<CourseLearningResponseDTO>.SuccessResponse(courseLearning, "Lấy thông tin học tập thành công"));
+            return Ok(ApiResponse<CourseLearningResponseDTO>.SuccessResponse(courseLearning, "Get course successful"));
+        }
+        /// <summary>
+        /// Get detailed course progress for learning
+        /// </summary>
+        /// <param name="courseId">Course ID</param>
+        /// <remarks>Author: HaiPDHE172178 | Role: STUDENT</remarks>
+        [HttpGet("progress/{courseId}")]
+        public async Task<ActionResult<int>> GetProgressAsync(string courseId)
+        {
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(ApiResponse<int>.ErrorResponse("User is not authenticated"));
+            }
+
+            var progress = await _courseService.GetProgressAsync(userId, courseId);
+            return Ok(ApiResponse<int>.SuccessResponse(progress, "Get progress successful"));
         }
 
         /// <summary>
