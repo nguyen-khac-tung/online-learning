@@ -84,12 +84,12 @@ builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<ILevelRepository, LevelRepository>();
 
 var app = builder.Build();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
-    RequestPath = "/uploads"
-});
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    FileProvider = new PhysicalFileProvider(
+//        Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+//    RequestPath = "/uploads"
+//});
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -97,21 +97,19 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+
 app.UseCors("AllowFrontend"); // Use the specific CORS policy
-app.UseRouting();
-app.UseStaticFiles();
-// Disable HTTPS redirection in development to avoid issues with frontend
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
 app.UseCors(c =>
 {
 	c.AllowAnyHeader();
 	c.AllowAnyMethod();
 	c.AllowAnyOrigin();
 });
+
 app.UseHttpsRedirection();
+
+app.UseRouting();
+//app.UseStaticFiles();
 
 app.UseAuthentication();
 
