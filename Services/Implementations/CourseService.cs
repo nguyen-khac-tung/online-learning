@@ -45,5 +45,26 @@ namespace Online_Learning.Services.Implementations
 			return await _courseRepository.GetCourseLearningAsync(courseId, userId);
 		}
 
-	}
+        public async Task<bool> CheckEnrollmentAsync(string userId, string courseId)
+        {
+            return await _courseRepository.CheckEnrollmentAsync(userId, courseId);
+        }
+
+        public async Task<bool> UpdateQuizProgressAsync(string userId, long quizId)
+        {
+            try
+            {
+                return await _courseRepository.UpdateQuizProgressAsync(userId, quizId);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<int> GetProgressAsync(string userId, string courseId)
+        {
+            return await _courseRepository.GetProgressAsync(userId, courseId);
+        }
+    }
 }

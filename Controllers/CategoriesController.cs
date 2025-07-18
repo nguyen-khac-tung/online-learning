@@ -14,7 +14,12 @@ namespace Online_Learning.Controllers
 		{
 			_categoryRepository = categoryRepository;
 		}
-		[HttpGet]
+
+        /// <summary>
+        /// Get category for filter 
+        /// </summary>
+        /// <remarks>Author: HaiPDHE172178 | Role: Guest</remarks>
+        [HttpGet]
 		public async Task<IActionResult> GetAllCategoryAsync()
 		{
 			var result = await _categoryRepository.GetAllCategoriesAsync();

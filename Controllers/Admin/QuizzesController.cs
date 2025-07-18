@@ -7,7 +7,6 @@ using Online_Learning.Models.DTOs.Response.Admin.OptionDto;
 using Online_Learning.Models.DTOs.Response.Admin.QuestionDto;
 using Online_Learning.Models.DTOs.Response.Admin.QuizDto;
 using Online_Learning.Models.Entities;
-using Online_Learning.Services.Interfaces;
 using Online_Learning.Services.Interfaces.Admin;
 
 namespace Online_Learning.Controllers.Admin

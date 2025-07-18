@@ -2,12 +2,16 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Online_Learning.Models.Entities;
 
 public partial class UserQuizResult
 {
-    public long UserQuizResultId { get; set; }
+	[Key]
+	[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+	public long UserQuizResultId { get; set; }
 
     public string UserId { get; set; }
 

@@ -38,9 +38,17 @@ namespace Online_Learning.Configurations
 
 			//lesson
 			services.AddScoped<ILesssonRepository, LessonRepository>();
+
+
+			//quiz
+			services.AddScoped<IQuizzRepository, QuizzRepository>();
+			services.AddScoped<IQuizService, QuizService>();
+
+
 			
 			//email
 			services.AddSingleton<IEmailService, EmailService>();
+
 		}
 	}
 }
