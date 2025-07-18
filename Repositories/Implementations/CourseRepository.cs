@@ -333,6 +333,10 @@ namespace Online_Learning.Repositories.Implementations
             // Tính toán tiến độ mới
             var newProgress = CalculateCourseProgress(userId, courseId);
             enrollment.Progress = newProgress;
+            if(newProgress == 100)
+            {
+                enrollment.Status = 1;
+            }
             _context.SaveChanges();
         }
 
