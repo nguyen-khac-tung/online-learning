@@ -139,6 +139,10 @@ namespace Online_Learning.Repositories.Implementations.Admin
             {
                 throw new InvalidOperationException("Course not found");
             }
+            // Ki?m tra trùng s? th? t? module trong course
+            bool isDuplicate = await _context.Modules.AnyAsync(m => m.CourseId == module.CourseId && m.ModuleNumber == module.ModuleNumber);
+            if (isDuplicate)
+                throw new InvalidOperationException("S? th? t? module này ?ã t?n t?i trong khóa h?c!");
             // Auto-generate module number if not provided
             if (module.ModuleNumber <= 0)
             {
@@ -161,6 +165,10 @@ namespace Online_Learning.Repositories.Implementations.Admin
             {
                 return false;
             }
+            // Ki?m tra trùng s? th? t? (tr? chính nó)
+            bool isDuplicate = await _context.Modules.AnyAsync(m => m.CourseId == existingModule.CourseId && m.ModuleNumber == module.ModuleNumber && m.ModuleId != id);
+            if (isDuplicate)
+                throw new InvalidOperationException("S? th? t? module này ?ã t?n t?i trong khóa h?c!");
             existingModule.ModuleName = module.ModuleName;
             existingModule.ModuleNumber = module.ModuleNumber;
             existingModule.Status = module.Status;
@@ -191,4 +199,4 @@ namespace Online_Learning.Repositories.Implementations.Admin
             return true;
         }
     }
-} 
+}

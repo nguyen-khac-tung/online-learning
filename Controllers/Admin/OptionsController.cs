@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Online_Learning.Models.DTOs.Request.Admin.OptionDto;
@@ -11,6 +12,7 @@ namespace Online_Learning.Controllers.Admin
 {
     [Route("api/admin/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class OptionsController : ControllerBase
     {
         private readonly IOptionService _optionService;
