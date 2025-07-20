@@ -72,4 +72,4 @@ namespace Online_Learning.Services.Implementations.Admin
             return await _moduleRepository.DeleteModuleAsync(id);
         }
     }
-} 
+}

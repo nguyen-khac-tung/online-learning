@@ -134,6 +134,11 @@ namespace Online_Learning.Repositories.Implementations.Admin
 
         public async Task<LessonResponseDto?> CreateLessonAsync(Lesson lesson)
         {
+            // Kiểm tra trùng số thứ tự trong module
+            bool isDuplicate = await _context.Lessons.AnyAsync(l => l.ModuleId == lesson.ModuleId && l.LessonNumber == lesson.LessonNumber);
+            if (isDuplicate)
+                throw new InvalidOperationException("Số thứ tự bài học này đã tồn tại trong module!");
+
             try
             {
                 _context.Lessons.Add(lesson);
@@ -146,7 +151,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
             {
                 Console.WriteLine($"[ERROR] CreateLessonAsync failed: {ex.Message}");
                 Console.WriteLine($"[STACKTRACE] {ex.StackTrace}");
-                return null; // ho?c throw l?i n?u mu?n x? l bn ngoi
+                return null;
             }
         }
 
@@ -158,6 +163,11 @@ namespace Online_Learning.Repositories.Implementations.Admin
             {
                 return false;
             }
+            // Kiểm tra trùng số thứ tự (trừ chính nó)
+            bool isDuplicate = await _context.Lessons.AnyAsync(l => l.ModuleId == existingLesson.ModuleId && l.LessonNumber == lesson.LessonNumber && l.LessonId != id);
+            if (isDuplicate)
+                throw new InvalidOperationException("Số thứ tự bài học này đã tồn tại trong module!");
+
             existingLesson.LessonNumber = lesson.LessonNumber;
             existingLesson.LessonName = lesson.LessonName;
             existingLesson.LessonContent = lesson.LessonContent;
@@ -184,4 +194,4 @@ namespace Online_Learning.Repositories.Implementations.Admin
             return true;
         }
     }
-} 
+}

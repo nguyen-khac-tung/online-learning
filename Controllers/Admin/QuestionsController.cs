@@ -13,11 +13,13 @@ using System.ComponentModel.DataAnnotations;
 using Online_Learning.Models.Entities;
 using Online_Learning.Services.Interfaces;
 using Online_Learning.Services.Interfaces.Admin;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Online_Learning.Controllers.Admin
 {
     [Route("api/admin/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class QuestionsController : ControllerBase
     {
         private readonly IQuestionService _questionService;
