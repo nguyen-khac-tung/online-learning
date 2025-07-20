@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Learning.Attributes;
 using Online_Learning.Constants.Enums;
 using Online_Learning.Models.DTOs.Request.Admin;
+using Online_Learning.Models.DTOs.Request.User;
 using Online_Learning.Models.DTOs.Response.Admin;
+using Online_Learning.Models.DTOs.Response.Common;
+using Online_Learning.Models.DTOs.Response.User;
 using Online_Learning.Services.Interfaces;
 
 namespace Online_Learning.Controllers
@@ -19,10 +23,41 @@ namespace Online_Learning.Controllers
             _userService = userService;
         }
 
+        // ------------------------ 👤 User Endpoints (for authenticated users) ------------------------
+
+        /// <summary>
+        /// Lấy thông tin profile của người dùng hiện tại
+        /// </summary>
+        [Authorize]
+        [HttpGet("profile")]
+        public IActionResult GetUserProfile()
+        {
+            string msg = _userService.GetUserProfile(User, out UserProfileDto userProfile);
+            if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
+
+            return Ok(ApiResponse<UserProfileDto>.SuccessResponse(userProfile));
+        }
+
+        /// <summary>
+        /// Cập nhật thông tin cá nhân của người dùng hiện tại
+        /// </summary>
+        [Authorize]
+        [HttpPut("update-profile")]
+        public IActionResult UpdateUserProfile([FromBody] UpdateProfileRequestDto request)
+        {
+            string msg = _userService.UpdateUserProfile(User, request);
+            if (msg.Length > 0) return BadRequest(ApiResponse<string>.ErrorResponse(msg));
+
+            return Ok(ApiResponse<string>.SuccessResponse("", "Profile updated successfully."));
+        }
+
+        // ------------------------ 🛠 Admin Endpoints ------------------------
+
         /// <summary>
         /// Lấy danh sách người dùng với phân trang, tìm kiếm và lọc
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<PagedResponse<UserResponse>>>> GetUsers([FromQuery] UserFilterRequest request)
         {
             var result = await _userService.GetUsersAsync(request);
@@ -37,6 +72,7 @@ namespace Online_Learning.Controllers
         /// Lấy thông tin chi tiết một người dùng
         /// </summary>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<UserResponse>>> GetUser(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -57,6 +93,7 @@ namespace Online_Learning.Controllers
         /// Tạo mới tài khoản người dùng (admin thêm thủ công)
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<UserResponse>>> CreateUser([FromBody] CreateUserRequest request)
         {
             if (!ModelState.IsValid)
@@ -81,6 +118,7 @@ namespace Online_Learning.Controllers
         /// Cập nhật thông tin người dùng
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<UserResponse>>> UpdateUser(string id, [FromBody] UpdateUserRequest request)
         {
             if (string.IsNullOrEmpty(id))
@@ -111,6 +149,7 @@ namespace Online_Learning.Controllers
         /// Xóa mềm tài khoản người dùng
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<bool>>> DeleteUser(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -131,6 +170,7 @@ namespace Online_Learning.Controllers
         /// Khoá / mở khoá tài khoản
         /// </summary>
         [HttpPatch("{id}/toggle-status")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<bool>>> ToggleUserStatus(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -172,6 +212,7 @@ namespace Online_Learning.Controllers
         /// Cập nhật quyền / vai trò người dùng
         /// </summary>
         [HttpPatch("{id}/assign-role")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<bool>>> AssignRole(string id, [FromBody] AssignRoleRequest request)
         {
             if (string.IsNullOrEmpty(id))
@@ -202,6 +243,7 @@ namespace Online_Learning.Controllers
         /// Xuất danh sách người dùng ra Excel
         /// </summary>
         [HttpGet("export/excel")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExportToExcel([FromQuery] UserFilterRequest request)
         {
             try
@@ -221,7 +263,7 @@ namespace Online_Learning.Controllers
         /// Xuất danh sách người dùng ra PDF
         /// </summary>
         [HttpGet("export/pdf")]
-        
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExportToPdf([FromQuery] UserFilterRequest request)
         {
             try
@@ -241,11 +283,11 @@ namespace Online_Learning.Controllers
         /// Lấy thống kê tổng quan về người dùng
         /// </summary>
         [HttpGet("statistics")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminApiResponse<UserStatisticsResponse>>> GetUserStatistics()
         {
             try
             {
-                // Get all users for statistics
                 var allUsersRequest = new UserFilterRequest { PageSize = int.MaxValue, PageNumber = 1 };
                 var allUsersResult = await _userService.GetUsersAsync(allUsersRequest);
 
@@ -277,3 +319,4 @@ namespace Online_Learning.Controllers
         }
     }
 }
+
