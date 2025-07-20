@@ -15,21 +15,57 @@ namespace Online_Learning.Configurations
 		// ae dki service cac thu trong day
 		public static void AddDependencyInjectionConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
-            // 🧠 Repositories
-            services.AddScoped<IRatingRepository, RatingRepository>();
-            services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentRepository>();
-            services.AddScoped<IDiscountRepository, DiscountRepository>();
+            // 🔐 Auth
+            services.AddScoped<IAuthService, AuthService>();
 
-            // ⚙️ Services
-            services.AddScoped<IRatingService, RatingService>();
-            services.AddScoped<IDiscountService, DiscountService>();
-            //AdminUser
+            // 👤 User
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            //dashboard 
+
+            // 🔐 Role & Function
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IFunctionRepository, FunctionRepository>();
+
+            // 🔐 OTP
+            services.AddScoped<IUserOtpRepository, UserOtpRepository>();
+
+            // 🛒 Cart
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICartService, CartService>();
+
+            // 📚 Course
+            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ICourseService, CourseService>();
+
+            // 🏷️ Category
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            // 🎬 Lesson
+            services.AddScoped<ILesssonRepository, LessonRepository>();
+
+            // ❓ Quiz
+            services.AddScoped<IQuizzRepository, QuizzRepository>();
+            services.AddScoped<IQuizService, QuizService>();
+
+            // 📧 Email
+            services.AddSingleton<IEmailService, EmailService>();
+
+            // ⭐ Rating
+            services.AddScoped<IRatingRepository, RatingRepository>();
+            services.AddScoped<IRatingService, RatingService>();
+
+            // 🎓 Enrollment
+            services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentRepository>();
+
+            // 🎁 Discount
+            services.AddScoped<IDiscountRepository, DiscountRepository>();
+            services.AddScoped<IDiscountService, DiscountService>();
+
+            // 📊 Dashboard
             services.AddScoped<IDashboardService, DashboardService>();
-            //comment 
+
+            // 💬 Comment
             services.AddScoped<ICommentService, CommentService>();
         }
 	}
