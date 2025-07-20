@@ -67,8 +67,6 @@ public partial class OnlineLearningContext : DbContext
 
     public virtual DbSet<UserQuizResult> UserQuizResults { get; set; }
 
-    public virtual DbSet<Rating> Ratings { get; set; }
-
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

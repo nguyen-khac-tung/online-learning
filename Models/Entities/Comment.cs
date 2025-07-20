@@ -22,8 +22,6 @@ public partial class Comment
 
     public long? LessonId { get; set; }
 
-    public int Status { get; set; }
-
     public virtual ICollection<Comment> InverseParentComment { get; set; } = new List<Comment>();
 
     public virtual Lesson Lesson { get; set; }

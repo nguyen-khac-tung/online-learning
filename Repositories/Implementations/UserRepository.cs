@@ -20,7 +20,7 @@ namespace Online_Learning.Repositories.Implementations
         public async Task<(List<User> users, int totalCount)> GetUsersAsync(UserFilterRequest request)
         {
             var query = _context.Users
-                .Include(u => u.Rolers)
+                .Include(u => u.Roles)
                 .Include(u => u.CourseEnrollments)
                 .Where(u => u.Status != (int)UserStatus.Deleted);
 
@@ -41,7 +41,7 @@ namespace Online_Learning.Repositories.Implementations
 
             if (request.Role.HasValue)
             {
-                query = query.Where(u => u.Rolers.Any(r => r.RoleId == (int)request.Role.Value));
+                query = query.Where(u => u.Roles.Any(r => r.RoleId == (int)request.Role.Value));
             }
 
             // Get total count before pagination
@@ -68,7 +68,7 @@ namespace Online_Learning.Repositories.Implementations
         public async Task<User?> GetUserByIdAsync(string userId)
         {
             return await _context.Users
-                .Include(u => u.Rolers)
+                .Include(u => u.Roles)
                 .Include(u => u.CourseEnrollments)
                 .FirstOrDefaultAsync(u => u.UserId == userId && u.Status != (int)UserStatus.Deleted);
         }
@@ -76,7 +76,7 @@ namespace Online_Learning.Repositories.Implementations
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _context.Users
-                .Include(u => u.Rolers)
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.Email == email && u.Status != (int)UserStatus.Deleted);
         }
 
@@ -128,22 +128,22 @@ namespace Online_Learning.Repositories.Implementations
         public async Task<List<Role>> GetUserRolesAsync(string userId)
         {
             var user = await _context.Users
-                .Include(u => u.Rolers)
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
 
-            return user?.Rolers.ToList() ?? new List<Role>();
+            return user?.Roles.ToList() ?? new List<Role>();
         }
 
         public async Task<bool> UpdateUserRolesAsync(string userId, List<UserRole> roles)
         {
             var user = await _context.Users
-                .Include(u => u.Rolers)
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user == null) return false;
 
             // Clear existing roles
-            user.Rolers.Clear();
+            user.Roles.Clear();
 
             // Add new roles
             foreach (var roleEnum in roles)
@@ -151,7 +151,7 @@ namespace Online_Learning.Repositories.Implementations
                 var role = await _context.Roles.FindAsync((int)roleEnum);
                 if (role != null)
         {
-                    user.Rolers.Add(role);
+                    user.Roles.Add(role);
                 }
             }
 

@@ -226,7 +226,7 @@ namespace Online_Learning.Controllers
         /// Xuất danh sách người dùng ra PDF
         /// </summary>
         [HttpGet("export/pdf")]
-        
+
         public async Task<IActionResult> ExportToPdf([FromQuery] UserFilterRequest request)
         {
             try
@@ -249,7 +249,7 @@ namespace Online_Learning.Controllers
         public async Task<ActionResult<AdminApiResponse<UserStatisticsResponse>>> GetUserStatistics()
         {
             try
-        {
+            {
                 // Get all users for statistics
                 var allUsersRequest = new UserFilterRequest { PageSize = int.MaxValue, PageNumber = 1 };
                 var allUsersResult = await _userService.GetUsersAsync(allUsersRequest);
@@ -298,4 +298,5 @@ namespace Online_Learning.Controllers
 
             return Ok(ApiResponse<string>.SuccessResponse("", "Profile updated successfully."));
         }
+    }
 }

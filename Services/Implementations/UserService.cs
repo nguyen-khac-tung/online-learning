@@ -283,7 +283,7 @@ namespace Online_Learning.Services.Implementations
                 worksheet.Cells[row, 7].Value = user.Address;
                 worksheet.Cells[row, 8].Value = GetStatusText((UserStatus)user.Status!);
                 worksheet.Cells[row, 9].Value = user.CreatedAt.ToString("dd/MM/yyyy HH:mm");
-                worksheet.Cells[row, 10].Value = string.Join(", ", user.Rolers.Select(r => GetRoleText((UserRole)r.RoleId)));
+                worksheet.Cells[row, 10].Value = string.Join(", ", user.Roles.Select(r => GetRoleText((UserRole)r.RoleId)));
             }
 
             return package.GetAsByteArray();
@@ -329,7 +329,7 @@ namespace Online_Learning.Services.Implementations
                 table.AddCell(new Cell().Add(new Paragraph(user.Gender == true ? "Nam" : user.Gender == false ? "Nữ" : "").SetFont(dataFont).SetFontSize(9)));
                 table.AddCell(new Cell().Add(new Paragraph(user.Address ?? "").SetFont(dataFont).SetFontSize(9)));
                 table.AddCell(new Cell().Add(new Paragraph(GetStatusText((UserStatus)user.Status!)).SetFont(dataFont).SetFontSize(9)));
-                var roleText = string.Join(", ", user.Rolers.Select(r => GetRoleText((UserRole)r.RoleId)));
+                var roleText = string.Join(", ", user.Roles.Select(r => GetRoleText((UserRole)r.RoleId)));
                 table.AddCell(new Cell().Add(new Paragraph(roleText).SetFont(dataFont).SetFontSize(9)));
             }
 
@@ -354,7 +354,7 @@ namespace Online_Learning.Services.Implementations
                 Status = (UserStatus)user.Status!,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
-                Roles = user.Rolers.Select(r => (UserRole)r.RoleId).ToList(),
+                Roles = user.Roles.Select(r => (UserRole)r.RoleId).ToList(),
                 TotalCourses = user.CourseEnrollments.Count,
                 CompletedCourses = user.CourseEnrollments.Count(ce => ce.Status == (int)EnrollmentStatus.Completed)
             };
