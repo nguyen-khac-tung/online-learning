@@ -66,5 +66,10 @@ namespace Online_Learning.Services.Implementations
         {
             return await _courseRepository.GetProgressAsync(userId, courseId);
         }
+
+        public async Task<bool> EnrollCourseAsync(string userId, string courseId)
+        {
+            return await _courseRepository.EnrollCourseAsync(userId, courseId);
+        }
     }
 }
