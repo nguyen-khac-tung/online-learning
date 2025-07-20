@@ -19,6 +19,7 @@ namespace Online_Learning.Configurations
 		// ae dki service cac thu trong day
 		public static void AddDependencyInjectionConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
+			services.AddHttpContextAccessor();
             // 🧠 Repositories
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentRepository>();
