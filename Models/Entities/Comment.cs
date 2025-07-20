@@ -14,14 +14,13 @@ public partial class Comment
     public string Content { get; set; }
 
     public DateTime CreatedAt { get; set; }
+    public int Status { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 
     public string UserId { get; set; }
 
     public long? LessonId { get; set; }
-
-    public int Status { get; set; }
 
     public virtual ICollection<Comment> InverseParentComment { get; set; } = new List<Comment>();
 
