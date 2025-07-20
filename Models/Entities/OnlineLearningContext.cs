@@ -673,7 +673,6 @@ public partial class OnlineLearningContext : DbContext
             entity.ToTable("UserQuizResult");
 
             entity.Property(e => e.UserQuizResultId)
-                .ValueGeneratedNever()
                 .HasColumnName("UserQuizResultID");
             entity.Property(e => e.QuizId).HasColumnName("QuizID");
             entity.Property(e => e.Score).HasColumnType("decimal(5, 2)");

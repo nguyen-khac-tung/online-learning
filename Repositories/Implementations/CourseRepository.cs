@@ -262,7 +262,7 @@ namespace Online_Learning.Repositories.Implementations
                                     .FirstOrDefault()
                 }).FirstOrDefaultAsync();
             obj.LessonIdCompleted = _context.LessonProgresses
-                                            .Where(lp => lp.UserId == userId)
+                                            .Where(lp => lp.UserId == userId && lp.IsCompleted==true)
                                             .Select(lp => lp.LessonId)
                                             .ToList();
             return obj;
@@ -333,6 +333,10 @@ namespace Online_Learning.Repositories.Implementations
             // Tính toán tiến độ mới
             var newProgress = CalculateCourseProgress(userId, courseId);
             enrollment.Progress = newProgress;
+            if(newProgress == 100)
+            {
+                enrollment.Status = 1;
+            }
             _context.SaveChanges();
         }
 
