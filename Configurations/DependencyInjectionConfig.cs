@@ -29,6 +29,10 @@ namespace Online_Learning.Configurations
 			//userotp
 			services.AddScoped<IUserOtpRepository, UserOtpRepository>();
 
+			//cart
+			services.AddScoped<ICartRepository, CartRepository>();
+			services.AddScoped<ICartService, CartService>();
+
             //course
             services.AddScoped<ICourseRepository, CourseRepository>();
 			services.AddScoped<ICourseService, CourseService>();

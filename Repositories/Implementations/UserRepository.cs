@@ -1,4 +1,5 @@
-﻿using Online_Learning.Constants.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Online_Learning.Constants.Enums;
 using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Interfaces;
 
@@ -23,6 +24,7 @@ namespace Online_Learning.Repositories.Implementations
         public User? GetUserByEmail(string email)
         {
             return _context.Users
+                .Include(u => u.Roles)
                 .Where(u => u.Email == email && u.Status != (int)UserStatus.Deleted)
                 .FirstOrDefault();
         }

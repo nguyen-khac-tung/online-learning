@@ -53,6 +53,7 @@ namespace Online_Learning.Services.Implementations
                 UserId = user.UserId,
                 Email = user.Email,
                 FullName = user.FullName,
+                Roles = user.Roles.Select(u => u.RoleName).ToList(),
                 AvatarUrl = user.AvatarUrl
             };
 
@@ -104,6 +105,7 @@ namespace Online_Learning.Services.Implementations
                 UserId = newUser.UserId,
                 Email = newUser.Email,
                 FullName = newUser.FullName,
+                Roles = newUser.Roles.Select(u => u.RoleName).ToList(),
                 AvatarUrl = newUser.AvatarUrl
             };
 
