@@ -67,6 +67,11 @@ public partial class OnlineLearningContext : DbContext
 
     public virtual DbSet<UserQuizResult> UserQuizResults { get; set; }
 
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CartItem>(entity =>
