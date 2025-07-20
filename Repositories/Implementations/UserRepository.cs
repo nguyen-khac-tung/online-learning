@@ -178,6 +178,7 @@ namespace Online_Learning.Repositories.Implementations
         {
             return _context.Users
                 .Include(u => u.Roles)
+                .Include(u => u.CartItems)
                 .Where(u => u.Email == email && u.Status != (int)UserStatus.Deleted)
                 .FirstOrDefault();
         }

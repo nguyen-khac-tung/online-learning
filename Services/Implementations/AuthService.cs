@@ -54,6 +54,7 @@ namespace Online_Learning.Services.Implementations
                 Email = user.Email,
                 FullName = user.FullName,
                 Roles = user.Roles.Select(u => u.RoleName).ToList(),
+                CourseCartItems = user.CartItems.Select(c => c.CourseId).ToList(),
                 AvatarUrl = user.AvatarUrl
             };
 

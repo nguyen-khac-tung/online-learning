@@ -7,6 +7,7 @@
         public string Email { get; set; }
         public string FullName { get; set; }
         public List<string> Roles { get; set; }
+        public List<string> CourseCartItems { get; set; }
         public string? AvatarUrl { get; set; }
     }
 
