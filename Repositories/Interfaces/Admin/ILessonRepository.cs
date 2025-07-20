@@ -14,6 +14,6 @@ namespace Online_Learning.Repositories.Interfaces.Admin
         Task<LessonResponseDto> CreateLessonAsync(Lesson lesson);
         Task<bool> UpdateLessonAsync(long id, Lesson lesson);
         Task<bool> DeleteLessonAsync(long id);
-        // Có thể bổ sung các method đặc thù khác nếu cần
+     
     }
-} 
+}

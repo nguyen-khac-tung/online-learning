@@ -61,35 +61,22 @@ builder.Services.AddCors(options =>
 // DI Configuration
 builder.Services.AddDependencyInjectionConfiguration(builder.Configuration);
 
-// Cấu hình DI_Admin
-builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<IModuleService, ModuleService>();
-builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
-
-builder.Services.AddScoped<Online_Learning.Services.Interfaces.Admin.ICourseService, Online_Learning.Services.Implementations.Admin.CourseService>();
-builder.Services.AddScoped<Online_Learning.Repositories.Interfaces.Admin.ICourseRepository, Online_Learning.Repositories.Implementations.Admin.CourseRepository>();
-builder.Services.AddScoped<ILessonService, LessonService>();
-builder.Services.AddScoped<ILessonRepository, Online_Learning.Repositories.Implementations.Admin.LessonRepository>();
-builder.Services.AddScoped<IQuizService, QuizService>();
-builder.Services.AddScoped<IQuizRepository, QuizRepository>();
-builder.Services.AddScoped<IQuestionService, QuestionService>();
-builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-builder.Services.AddScoped<IOptionService, OptionService>();
-builder.Services.AddScoped<IOptionRepository, OptionRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<Online_Learning.Repositories.Interfaces.Admin.ICategoryRepository, Online_Learning.Repositories.Implementations.Admin.CategoryRepository>();
-builder.Services.AddScoped<ILanguageService, LanguageService>();
-builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
-builder.Services.AddScoped<ILevelService, LevelService>();
-builder.Services.AddScoped<ILevelRepository, LevelRepository>();
 
 var app = builder.Build();
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    FileProvider = new PhysicalFileProvider(
-//        Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
-//    RequestPath = "/uploads"
-//});
+
+
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
+// Cấu hình Static Files
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -14,6 +14,6 @@ namespace Online_Learning.Repositories.Interfaces.Admin
         Task<ModuleResponseDto> CreateModuleAsync(Module module);
         Task<bool> UpdateModuleAsync(long id, Module module);
         Task<bool> DeleteModuleAsync(long id);
-        // Có thể bổ sung các method đặc thù khác nếu cần
+       
     }
-} 
+}

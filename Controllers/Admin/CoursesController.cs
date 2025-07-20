@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Online_Learning.Models.DTOs.Request.Admin.Course;
@@ -12,6 +13,7 @@ namespace Online_Learning.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class CoursesController : ControllerBase
     {
         private readonly ICourseService _courseService;

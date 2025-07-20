@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using Online_Learning.Services;
 using Online_Learning.Services.Interfaces;
 using Online_Learning.Services.Interfaces.Admin;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Online_Learning.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class LevelsController : ControllerBase
     {
         private readonly ILevelService _levelService;

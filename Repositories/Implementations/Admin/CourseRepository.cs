@@ -161,15 +161,11 @@ namespace Online_Learning.Repositories.Implementations.Admin
                     }
                 }
 
-                var maxCoursePriceId = await _context.CoursePrices.MaxAsync(cp => (long?)cp.CoursePriceId);
-                int nextCoursePriceId = maxCoursePriceId.HasValue ? (int)(maxCoursePriceId.Value + 1) : 1;
-
                 CoursePrice? coursePrice = null;
                 if (price.HasValue)
                 {
                     coursePrice = new CoursePrice
                     {
-                        CoursePriceId = nextCoursePriceId,
                         CourseId = course.CourseId,
                         Price = price.Value,
                         CreateAt = DateTime.UtcNow
@@ -183,9 +179,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
                     uploadedFiles = await fileService.UploadFilesAsync(attachmentFiles, "courses");
                     if (uploadedFiles.Any())
                     {
-                        var maxCourseImageId = await _context.CourseImages.MaxAsync(ci => (long?)ci.ImageId);
-                        int nextCourseImageId = maxCourseImageId.HasValue ? (int)(maxCourseImageId.Value + 1) : 1;
-                        _context.CourseImages.Add(new CourseImage { ImageId = nextCourseImageId, CourseId = course.CourseId, ImageUrl = uploadedFiles.First() });
+                        _context.CourseImages.Add(new CourseImage { CourseId = course.CourseId, ImageUrl = uploadedFiles.First() });
                     }
                 }
 
@@ -247,7 +241,6 @@ namespace Online_Learning.Repositories.Implementations.Admin
                     {
                         _context.CoursePrices.Add(new CoursePrice
                         {
-                            CoursePriceId = nextCoursePriceId,
                             CourseId = course.CourseId,
                             Price = courseDto.Price.Value,
                             CreateAt = DateTime.UtcNow
@@ -275,9 +268,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
                     var uploadedFiles = await fileService.UploadFilesAsync(courseDto.AttachmentFiles, "courses");
                     if (uploadedFiles.Any())
                     {
-                        var maxCourseImageId = await _context.CourseImages.MaxAsync(ci => (long?)ci.ImageId);
-                        int nextCourseImageId = maxCourseImageId.HasValue ? (int)(maxCourseImageId.Value + 1) : 1;
-                        _context.CourseImages.Add(new CourseImage { ImageId = nextCourseImageId, CourseId = course.CourseId, ImageUrl = uploadedFiles.First() });
+                        _context.CourseImages.Add(new CourseImage { CourseId = course.CourseId, ImageUrl = uploadedFiles.First() });
                     }
                 }
                 await _context.SaveChangesAsync();
@@ -310,4 +301,4 @@ namespace Online_Learning.Repositories.Implementations.Admin
             return true;
         }
     }
-} 
+}

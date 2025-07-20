@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Online_Learning.Models.DTOs.Request.Admin.ModuleDto;
@@ -11,6 +12,7 @@ namespace Online_Learning.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class ModulesController : ControllerBase
     {
         private readonly IModuleService _moduleService;
