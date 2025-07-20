@@ -15,6 +15,7 @@ namespace Online_Learning.Services.Interfaces
         Task<bool> CheckEnrollmentAsync(string userId, string courseId);
         Task<bool> UpdateQuizProgressAsync(string userId, long quizId);
         Task<int> GetProgressAsync(string userId, string courseId);
+        Task<bool> EnrollCourseAsync(string userId, string courseId);
 
     }
 }

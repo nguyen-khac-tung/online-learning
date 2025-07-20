@@ -152,6 +152,29 @@ namespace Online_Learning.Controllers
 		}
 
 		/// <summary>
+		/// Đăng ký khóa học (chỉ cho phép Student)
+		/// </summary>
+		/// <param name="courseId">ID khóa học</param>
+		/// <returns>Kết quả đăng ký</returns>
+		/// <remarks>Author: GPT | Role: STUDENT</remarks>
+		[Authorize(Roles = "Student")]
+		[HttpPost("enroll/{courseId}")]
+		public async Task<ActionResult> EnrollCourseAsync(string courseId)
+		{
+			var userId = GetCurrentUserId();
+			if (string.IsNullOrEmpty(userId))
+			{
+				return Unauthorized(ApiResponse<string>.UnauthorizedResponse("User is not authenticated"));
+			}
+			var result = await _courseService.EnrollCourseAsync(userId, courseId);
+			if (!result)
+			{
+				return BadRequest(ApiResponse<string>.ErrorResponse("Đăng ký khóa học thất bại hoặc đã đăng ký trước đó"));
+			}
+			return Ok(ApiResponse<string>.SuccessResponse(null, "Đăng ký khóa học thành công"));
+		}
+
+		/// <summary>
 		/// Get current user ID from token (temporary implementation)
 		/// </summary>
 		/// <returns>User ID</returns>

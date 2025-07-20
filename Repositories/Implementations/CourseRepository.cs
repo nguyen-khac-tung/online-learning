@@ -320,6 +320,24 @@ namespace Online_Learning.Repositories.Implementations
             return true;
         }
 
+        public async Task<bool> EnrollCourseAsync(string userId, string courseId)
+        {
+            var existed = _context.CourseEnrollments.FirstOrDefault(e => e.UserId == userId && e.CourseId == courseId);
+            if (existed != null)
+                return false;
+            var enrollment = new CourseEnrollment
+            {
+                UserId = userId,
+                CourseId = courseId,
+                CreatedAt = DateTime.UtcNow,
+                Status = 0,
+                Progress = 0 // hoặc trạng thái mặc định
+            };
+            _context.CourseEnrollments.Add(enrollment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         /// <summary>
         /// Cập nhật Progress trong CourseEnrollment dựa trên lesson hoặc quiz hoàn thành
         /// </summary>
