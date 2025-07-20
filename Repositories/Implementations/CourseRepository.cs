@@ -262,7 +262,7 @@ namespace Online_Learning.Repositories.Implementations
                                     .FirstOrDefault()
                 }).FirstOrDefaultAsync();
             obj.LessonIdCompleted = _context.LessonProgresses
-                                            .Where(lp => lp.UserId == userId)
+                                            .Where(lp => lp.UserId == userId && lp.IsCompleted==true)
                                             .Select(lp => lp.LessonId)
                                             .ToList();
             return obj;

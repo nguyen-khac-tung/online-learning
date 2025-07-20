@@ -58,8 +58,8 @@ namespace Online_Learning.Controllers
 		/// <remarks>Author: HaiPDHE172178 | Role: STUDENT</remarks>
 		// [Authorize(Roles ="Student")]	
 		[Authorize(Roles = "Student")]
-		[HttpGet("my-learning")]
-		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync([FromQuery] string? progress)
+		[HttpGet("my-learning/{progress}")]
+		public async Task<ActionResult<IEnumerable<CourseProgressResponseDTO>>> GetMyLearningCourseAsync(string progress)
 		{
 			var userId = GetCurrentUserId();
 			if (string.IsNullOrEmpty(userId))
