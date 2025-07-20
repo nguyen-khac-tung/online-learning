@@ -18,8 +18,23 @@ namespace Online_Learning.Repositories.Implementations
             return _context.CartItems
                 .Include(c => c.User)
                 .Include(c => c.Course)
+                    .ThenInclude(c => c.Language)
+                .Include(c => c.Course)
+                    .ThenInclude(c => c.Level)
+                .Include(c => c.Course)
+                    .ThenInclude(c => c.CourseImages)
+                .Include(c => c.Course)
+                    .ThenInclude(c => c.CoursePrices)
+                .Include(c => c.Course)
+                    .ThenInclude(c => c.CourseCategories)
+                        .ThenInclude(cc => cc.Category)
                 .Where(c => c.UserId == userId)
                 .ToList();
+        }
+
+        public CartItem? GetCartItemByCartId(long cartItemId)
+        {
+            return _context.CartItems.Where(c => c.CartItemId == cartItemId).FirstOrDefault();
         }
 
         public void AddCartItem(CartItem cartItem)

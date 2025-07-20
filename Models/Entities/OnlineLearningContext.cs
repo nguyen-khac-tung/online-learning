@@ -73,9 +73,7 @@ public partial class OnlineLearningContext : DbContext
         {
             entity.ToTable("CartItem");
 
-            entity.Property(e => e.CartItemId)
-                .ValueGeneratedNever()
-                .HasColumnName("CartItemID");
+            entity.Property(e => e.CartItemId).HasColumnName("CartItemID");
             entity.Property(e => e.CourseId)
                 .IsRequired()
                 .HasMaxLength(36)
@@ -102,9 +100,7 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.Property(e => e.CategoryId)
-                .ValueGeneratedNever()
-                .HasColumnName("CategoryID");
+            entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -112,9 +108,7 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.Property(e => e.CommentId)
-                .ValueGeneratedNever()
-                .HasColumnName("CommentID");
+            entity.Property(e => e.CommentId).HasColumnName("CommentID");
             entity.Property(e => e.LessonId).HasColumnName("LessonID");
             entity.Property(e => e.ParentCommentId).HasColumnName("ParentCommentID");
             entity.Property(e => e.UserId)
@@ -229,9 +223,7 @@ public partial class OnlineLearningContext : DbContext
         {
             entity.HasKey(e => e.ImageId);
 
-            entity.Property(e => e.ImageId)
-                .ValueGeneratedNever()
-                .HasColumnName("ImageID");
+            entity.Property(e => e.ImageId).HasColumnName("ImageID");
             entity.Property(e => e.CourseId)
                 .IsRequired()
                 .HasMaxLength(36)
@@ -250,9 +242,7 @@ public partial class OnlineLearningContext : DbContext
         {
             entity.ToTable("CoursePrice");
 
-            entity.Property(e => e.CoursePriceId)
-                .ValueGeneratedNever()
-                .HasColumnName("CoursePriceID");
+            entity.Property(e => e.CoursePriceId).HasColumnName("CoursePriceID");
             entity.Property(e => e.CourseId)
                 .IsRequired()
                 .HasMaxLength(36)
@@ -271,9 +261,7 @@ public partial class OnlineLearningContext : DbContext
         {
             entity.ToTable("Discount");
 
-            entity.Property(e => e.DiscountId)
-                .ValueGeneratedNever()
-                .HasColumnName("DiscountID");
+            entity.Property(e => e.DiscountId).HasColumnName("DiscountID");
             entity.Property(e => e.Code)
                 .IsRequired()
                 .HasMaxLength(15)
@@ -309,17 +297,13 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Language>(entity =>
         {
-            entity.Property(e => e.LanguageId)
-                .ValueGeneratedNever()
-                .HasColumnName("LanguageID");
+            entity.Property(e => e.LanguageId).HasColumnName("LanguageID");
             entity.Property(e => e.LanguageName).HasMaxLength(255);
         });
 
         modelBuilder.Entity<Lesson>(entity =>
         {
-            entity.Property(e => e.LessonId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("LessonID");
+            entity.Property(e => e.LessonId).HasColumnName("LessonID");
             entity.Property(e => e.LessonName)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -356,17 +340,13 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Level>(entity =>
         {
-            entity.Property(e => e.LevelId)
-                .ValueGeneratedNever()
-                .HasColumnName("LevelID");
+            entity.Property(e => e.LevelId).HasColumnName("LevelID");
             entity.Property(e => e.LevelName).HasMaxLength(255);
         });
 
         modelBuilder.Entity<Module>(entity =>
         {
-            entity.Property(e => e.ModuleId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("ModuleID");
+            entity.Property(e => e.ModuleId).HasColumnName("ModuleID");
             entity.Property(e => e.CourseId)
                 .IsRequired()
                 .HasMaxLength(36)
@@ -385,9 +365,7 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Option>(entity =>
         {
-            entity.Property(e => e.OptionId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("OptionID");
+            entity.Property(e => e.OptionId).HasColumnName("OptionID");
             entity.Property(e => e.Content)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -430,9 +408,7 @@ public partial class OnlineLearningContext : DbContext
         {
             entity.ToTable("OrderItem");
 
-            entity.Property(e => e.OrderItemId)
-                .ValueGeneratedNever()
-                .HasColumnName("OrderItemID");
+            entity.Property(e => e.OrderItemId).HasColumnName("OrderItemID");
             entity.Property(e => e.CourseId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
@@ -453,9 +429,7 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.Property(e => e.QuestionId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("QuestionID");
+            entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.Content)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -469,9 +443,7 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Quiz>(entity =>
         {
-            entity.Property(e => e.QuizId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("QuizID");
+            entity.Property(e => e.QuizId).HasColumnName("QuizID");
             entity.Property(e => e.ModuleId).HasColumnName("ModuleID");
             entity.Property(e => e.QuizName)
                 .IsRequired()
@@ -673,6 +645,7 @@ public partial class OnlineLearningContext : DbContext
             entity.ToTable("UserQuizResult");
 
             entity.Property(e => e.UserQuizResultId)
+                .ValueGeneratedNever()
                 .HasColumnName("UserQuizResultID");
             entity.Property(e => e.QuizId).HasColumnName("QuizID");
             entity.Property(e => e.Score).HasColumnType("decimal(5, 2)");

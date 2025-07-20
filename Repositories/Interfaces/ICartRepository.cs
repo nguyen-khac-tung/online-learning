@@ -4,6 +4,8 @@ namespace Online_Learning.Repositories.Interfaces
 {
     public interface ICartRepository
     {
+        public CartItem? GetCartItemByCartId(long cartItemId);
+
         public List<CartItem> GetCartItemsByUserId(string userId);
 
         public void AddCartItem(CartItem cartItem);

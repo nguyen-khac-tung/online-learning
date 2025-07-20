@@ -2,6 +2,8 @@
 using Online_Learning.Constants.Enums;
 using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Online_Learning.Repositories.Implementations
 {
@@ -13,6 +15,13 @@ namespace Online_Learning.Repositories.Implementations
         {
             _context = context;
         }
+
+        public string GetUserIdFromClaims(ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.FindFirstValue(JwtRegisteredClaimNames.Sub) ??
+                   claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
 
         public User? GetUserById(string userId)
         {

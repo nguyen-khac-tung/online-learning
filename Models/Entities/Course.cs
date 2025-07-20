@@ -7,7 +7,7 @@ namespace Online_Learning.Models.Entities;
 
 public partial class Course
 {
-    public string CourseId { get; set; } = Guid.NewGuid().ToString();
+    public string CourseId { get; set; }
 
     public string CourseName { get; set; }
 

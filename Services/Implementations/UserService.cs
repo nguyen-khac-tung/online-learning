@@ -21,7 +21,7 @@ namespace Online_Learning.Services.Implementations
         {
             userProfile = null;
 
-            var userId = GetUserIdFromClaims(currentUser);
+            var userId = _userRepository.GetUserIdFromClaims(currentUser);
 
             var user = _userRepository.GetUserById(userId);
             if (user == null)
@@ -48,7 +48,7 @@ namespace Online_Learning.Services.Implementations
 
         public string UpdateUserProfile(ClaimsPrincipal currentUser, UpdateProfileRequestDto request)
         {
-            var userId = GetUserIdFromClaims(currentUser);
+            var userId = _userRepository.GetUserIdFromClaims(currentUser);
 
             var user = _userRepository.GetUserById(userId);
             if (user == null)
@@ -68,12 +68,6 @@ namespace Online_Learning.Services.Implementations
             _userRepository.SaveChanges();
 
             return "";
-        }
-
-        private string GetUserIdFromClaims(ClaimsPrincipal claimsPrincipal)
-        {
-            return claimsPrincipal.FindFirstValue(JwtRegisteredClaimNames.Sub) ??
-                   claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
     }

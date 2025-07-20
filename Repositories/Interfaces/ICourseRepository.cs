@@ -1,6 +1,7 @@
-﻿using Online_Learning.Models.DTOs.Response.User;
+﻿using Online_Learning.Models.DTOs.Request.User;
 using Online_Learning.Models.DTOs.Response.Common;
-using Online_Learning.Models.DTOs.Request.User;
+using Online_Learning.Models.DTOs.Response.User;
+using Online_Learning.Models.Entities;
 
 namespace Online_Learning.Repositories.Interfaces
 {
@@ -18,6 +19,8 @@ namespace Online_Learning.Repositories.Interfaces
         Task<bool> UpdateQuizProgressAsync(string userId, long quizId);
         Task<int> GetProgressAsync(string userId, string courseId);
         Task<bool> EnrollCourseAsync(string userId, string courseId);
+
+        Course? GetCourseById(string id);
         // USER - end
     }
 }

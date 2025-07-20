@@ -439,5 +439,14 @@ namespace Online_Learning.Repositories.Implementations
 
             return enrollment?.Progress ?? 0;
         }
+
+        public Course? GetCourseById(string id)
+        {
+            return _context.Courses
+                .Include(c => c.Level)
+                .Include(c => c.CourseImages)
+                .Include(c => c.CoursePrices)
+                .Where(c => c.CourseId == id).FirstOrDefault();
+        }
     }
 }
