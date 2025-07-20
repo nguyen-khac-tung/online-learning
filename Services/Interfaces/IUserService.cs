@@ -1,4 +1,7 @@
-﻿using Online_Learning.Models.DTOs.Request.Admin;
+﻿using Online_Learning.Models.DTOs.Request.User;
+using Online_Learning.Models.DTOs.Response.User;
+using System.Security.Claims;
+using Online_Learning.Models.DTOs.Request.Admin;
 using Online_Learning.Models.DTOs.Response.Admin;
 
 namespace Online_Learning.Services.Interfaces
@@ -15,5 +18,7 @@ namespace Online_Learning.Services.Interfaces
         Task<AdminApiResponse<bool>> AssignRoleAsync(string userId, AssignRoleRequest request);
         Task<byte[]> ExportUsersToExcelAsync(UserFilterRequest request);
         Task<byte[]> ExportUsersToPdfAsync(UserFilterRequest request);
+        string GetUserProfile(ClaimsPrincipal currentUser, out UserProfileDto userProfile);
+        string UpdateUserProfile(ClaimsPrincipal currentUser, UpdateProfileRequestDto request);
     }
 }

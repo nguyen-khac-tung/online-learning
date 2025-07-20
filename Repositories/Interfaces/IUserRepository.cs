@@ -16,5 +16,14 @@ namespace Online_Learning.Repositories.Interfaces
         Task<bool> EmailExistsAsync(string email, string? excludeUserId = null);
         Task<List<Role>> GetUserRolesAsync(string userId);
         Task<bool> UpdateUserRolesAsync(string userId, List<UserRole> roles);
+        User? GetUserById(string userId);
+        public User? GetUserByEmail(string email);
+        public List<Role> GetRolesByUserId(string userId);
+
+        public void AddUser(User user);
+
+        public void UpdateUser(User user);
+
+        int SaveChanges();
     }
 }

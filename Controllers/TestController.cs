@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Learning.Attributes;
+using Online_Learning.Models.DTOs.Request.Auth;
+using Online_Learning.Models.DTOs.Response.Common;
 using Online_Learning.Models.Entities;
 
 namespace Online_Learning.Controllers
@@ -19,5 +22,24 @@ namespace Online_Learning.Controllers
 		{
 			return _context.Roles.ToList();
 		}
+
+        [DynamicAuthorize]
+        [HttpPost("Test")]
+        public IActionResult Test(UserLogin userLogin)
+        {
+            return Ok(ApiResponse<string>.SuccessResponse("mess"));
+        }
+
+
+        //Man phan quyen
+
+        //Logout
+
+        //Man Profile
+
+
+        //Login/Register google
+
+        //Profle Image
     }
 }

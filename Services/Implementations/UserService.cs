@@ -10,12 +10,17 @@ using Online_Learning.Constants.Enums;
 using Online_Learning.Models.DTOs.Request.Admin;
 using Online_Learning.Models.DTOs.Response.Admin;
 using Online_Learning.Models.Entities;
+using Online_Learning.Models.DTOs.Request.User;
+using Online_Learning.Models.DTOs.Response.User;
 using Online_Learning.Repositories.Interfaces;
 using Online_Learning.Services.Interfaces;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace Online_Learning.Services.Implementations
 {
@@ -62,10 +67,10 @@ namespace Online_Learning.Services.Implementations
             try
             {
                 var user = await _userRepository.GetUserByIdAsync(userId);
-                if (user == null)
-                {
+            if (user == null)
+            {
                     return AdminApiResponse<UserResponse>.ErrorResult("Không tìm thấy người dùng");
-                }
+            }
 
                 var userResponse = MapToUserResponse(user);
                 return AdminApiResponse<UserResponse>.SuccessResult(userResponse);
@@ -98,7 +103,7 @@ namespace Online_Learning.Services.Implementations
                     AvatarUrl = request.AvatarUrl,
                     Status = (int)request.Status,
                     CreatedAt = DateTime.UtcNow
-                };
+            };
 
                 // Hash password
                 user.Password = _passwordHasher.HashPassword(user, request.Password);
@@ -109,7 +114,7 @@ namespace Online_Learning.Services.Implementations
                 if (request.Roles.Any())
                 {
                     await _userRepository.UpdateUserRolesAsync(createdUser.UserId, request.Roles);
-                }
+        }
 
                 // Get updated user with roles
                 var userWithRoles = await _userRepository.GetUserByIdAsync(createdUser.UserId);
@@ -118,7 +123,7 @@ namespace Online_Learning.Services.Implementations
                 return AdminApiResponse<UserResponse>.SuccessResult(userResponse, "Tạo người dùng thành công");
             }
             catch (Exception ex)
-            {
+        {
                 return AdminApiResponse<UserResponse>.ErrorResult($"Lỗi khi tạo người dùng: {ex.Message}");
             }
         }
@@ -128,18 +133,18 @@ namespace Online_Learning.Services.Implementations
             try
             {
                 var user = await _userRepository.GetUserByIdAsync(userId);
-                if (user == null)
-                {
+            if (user == null)
+            {
                     return AdminApiResponse<UserResponse>.ErrorResult("Không tìm thấy người dùng");
-                }
+            }
 
                 // Update user properties
-                user.FullName = request.FullName;
-                user.DoB = request.DoB;
-                user.Gender = request.Gender;
-                user.Phone = request.Phone;
-                user.Address = request.Address;
-                user.AvatarUrl = request.AvatarUrl;
+            user.FullName = request.FullName;
+            user.DoB = request.DoB;
+            user.Gender = request.Gender;
+            user.Phone = request.Phone;
+            user.Address = request.Address;
+            user.AvatarUrl = request.AvatarUrl;
 
                 var updatedUser = await _userRepository.UpdateUserAsync(user);
                 var userResponse = MapToUserResponse(updatedUser);
@@ -366,7 +371,7 @@ namespace Online_Learning.Services.Implementations
         private string GetStatusText(UserStatus status)
         {
             return status switch
-            {
+        {
                 UserStatus.Active => "Hoạt động",
                 UserStatus.Inactive => "Không hoạt động",
                 UserStatus.Banned => "Bị cấm",
@@ -384,6 +389,65 @@ namespace Online_Learning.Services.Implementations
                 UserRole.Admin => "Quản trị viên",
                 _ => "Không xác định"
             };
+        }
+
+        public string GetUserProfile(ClaimsPrincipal currentUser, out UserProfileDto userProfile)
+        {
+            userProfile = null;
+
+            var userId = GetUserIdFromClaims(currentUser);
+
+            var user = _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return "User not found.";
+            }
+
+            var roles = _userRepository.GetRolesByUserId(userId);
+            userProfile = new UserProfileDto
+            {
+                UserId = user.UserId,
+                Email = user.Email,
+                FullName = user.FullName,
+                DoB = user.DoB,
+                Gender = user.Gender,
+                Phone = user.Phone,
+                Address = user.Address,
+                AvatarUrl = user.AvatarUrl,
+                Roles = roles.Select(r => r.RoleName).ToList()
+            };
+
+            return "";
+        }
+
+        public string UpdateUserProfile(ClaimsPrincipal currentUser, UpdateProfileRequestDto request)
+        {
+            var userId = GetUserIdFromClaims(currentUser);
+
+            var user = _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return "User not found.";
+            }
+
+            user.FullName = request.FullName;
+            user.DoB = request.DoB;
+            user.Gender = request.Gender;
+            user.Phone = request.Phone;
+            user.Address = request.Address;
+            user.AvatarUrl = request.AvatarUrl;
+            user.UpdatedAt = DateTime.Now;
+
+            _userRepository.UpdateUser(user);
+            _userRepository.SaveChanges();
+
+            return "";
+        }
+
+        private string GetUserIdFromClaims(ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.FindFirstValue(JwtRegisteredClaimNames.Sub) ??
+                   claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }

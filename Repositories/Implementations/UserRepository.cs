@@ -1,4 +1,5 @@
-﻿using Online_Learning.Constants.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Online_Learning.Constants.Enums;
 using Online_Learning.Models.DTOs.Request.Admin;
 using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Interfaces;
@@ -8,6 +9,7 @@ namespace Online_Learning.Repositories.Implementations
 {
     public class UserRepository : IUserRepository
     {
+
         private readonly OnlineLearningContext _context;
 
         public UserRepository(OnlineLearningContext context)
@@ -47,7 +49,7 @@ namespace Online_Learning.Repositories.Implementations
 
             // Apply sorting
             query = request.SortBy?.ToLower() switch
-            {
+        {
                 "fullname" => request.IsDescending ? query.OrderByDescending(u => u.FullName) : query.OrderBy(u => u.FullName),
                 "email" => request.IsDescending ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email),
                 "createdat" => request.IsDescending ? query.OrderByDescending(u => u.CreatedAt) : query.OrderBy(u => u.CreatedAt),
@@ -118,7 +120,7 @@ namespace Online_Learning.Repositories.Implementations
             if (!string.IsNullOrEmpty(excludeUserId))
             {
                 query = query.Where(u => u.UserId != excludeUserId);
-            }
+        }
 
             return await query.AnyAsync();
         }
@@ -148,13 +150,51 @@ namespace Online_Learning.Repositories.Implementations
             {
                 var role = await _context.Roles.FindAsync((int)roleEnum);
                 if (role != null)
-                {
+        {
                     user.Rolers.Add(role);
                 }
             }
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public User? GetUserById(string userId)
+        {
+            return _context.Users
+                .Where(u => u.UserId == userId && u.Status != (int)UserStatus.Deleted)
+                .FirstOrDefault();
+        }
+
+        public User? GetUserByEmail(string email)
+        {
+            return _context.Users
+                .Include(u => u.Roles)
+                .Where(u => u.Email == email && u.Status != (int)UserStatus.Deleted)
+                .FirstOrDefault();
+        }
+
+        public List<Role> GetRolesByUserId(string userId)
+        {
+            return _context.Users
+                .Where(u => u.UserId == userId && u.Status != (int)UserStatus.Deleted)
+                .SelectMany(u => u.Roles)
+                .ToList();
+        }
+
+        public void AddUser(User user)
+        {
+            _context.Users.Add(user);
+        }
+
+        public void UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+        }
+
+        public int SaveChanges()
+        {
+            return _context.SaveChanges();
         }
     }
 }
