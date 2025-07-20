@@ -63,6 +63,9 @@ public partial class OnlineLearningContext : DbContext
 
     public virtual DbSet<UserQuizResult> UserQuizResults { get; set; }
 
+    public virtual DbSet<Rating> Ratings { get; set; }
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
 
@@ -443,6 +446,7 @@ public partial class OnlineLearningContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
+            entity.ToTable("Role");
             entity.Property(e => e.RoleId)
                 .ValueGeneratedNever()
                 .HasColumnName("RoleID");
@@ -472,7 +476,7 @@ public partial class OnlineLearningContext : DbContext
                 .UsingEntity<Dictionary<string, object>>(
                     "UserRole",
                     r => r.HasOne<Role>().WithMany()
-                        .HasForeignKey("RolerId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoles_Roles"),
                     l => l.HasOne<User>().WithMany()
@@ -481,14 +485,14 @@ public partial class OnlineLearningContext : DbContext
                         .HasConstraintName("FK_UserRoles_User"),
                     j =>
                     {
-                        j.HasKey("UserId", "RolerId");
-                        j.ToTable("UserRoles");
+                        j.HasKey("UserId", "RoleId");
+                        j.ToTable("UserRole");
                         j.IndexerProperty<string>("UserId")
                             .HasMaxLength(36)
                             .IsUnicode(false)
                             .IsFixedLength()
                             .HasColumnName("UserID");
-                        j.IndexerProperty<int>("RolerId").HasColumnName("RolerID");
+                        j.IndexerProperty<int>("RoleId").HasColumnName("RoleID");
                     });
         });
 

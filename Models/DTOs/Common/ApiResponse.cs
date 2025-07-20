@@ -1,9 +1,10 @@
-﻿namespace Online_Learning.Models.DTOs.Response.Common
+﻿namespace Online_Learning.Models.DTOs.Common
 {
 	public class ApiResponse<T>
-	{
-		//  StatusCode (mã trạng thái HTTP, ví dụ: 200, 400, 500)
-		public int StatusCode { get; set; } = 200;
+
+    {
+        //  StatusCode (mã trạng thái HTTP, ví dụ: 200, 400, 500)
+        public int StatusCode { get; set; } = 200;
 
 		//  Message (thông điệp phản hồi, ví dụ: "Success" hoặc "Invalid input")
 		public string Message { get; set; } = string.Empty;
@@ -68,5 +69,7 @@
 		{
 			return ErrorResponse(message, 500);
 		}
+
+
 	}
 }
