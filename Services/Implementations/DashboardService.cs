@@ -157,13 +157,13 @@ namespace Online_Learning.Services.Implementations
                     {
                         Label = "Doanh thu",
                         Data = groupedData.Select(d => d.Revenue).ToList(),
-                        BackgroundColor = "#3B82F6"
+                        
                     },
                     new ChartDataset
                     {
                         Label = "Số đơn hàng",
                         Data = groupedData.Select(d => d.Orders).ToList(),
-                        BackgroundColor = "#10B981"
+                        
                     }
                 }
             };
