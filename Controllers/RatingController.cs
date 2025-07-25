@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Online_Learning.Constants;
 using Online_Learning.Models.DTOs.Rating;
 using Online_Learning.Services.Interfaces;
 
@@ -48,7 +49,7 @@ namespace Online_Learning.Controllers
         {
             var rating = await _svc.GetByUserCourseAsync(userId, courseId);
             if (rating == null)
-                return NotFound(new { message = "Người dùng chưa đánh giá khóa học này." });
+                return NotFound(new { message = Messages.UserNotRatedCourse });
             return Ok(rating);
         }
 
@@ -57,8 +58,8 @@ namespace Online_Learning.Controllers
         {
             var success = await _svc.DeleteAsync(ratingId);
             if (!success)
-                return NotFound(new { message = "Không tìm thấy đánh giá." });
-            return Ok(new { message = "Xóa đánh giá thành công." });
+                return NotFound(new { message = Messages.RatingNotFound });
+            return Ok(new { message = Messages.DeleteRatingSuccess });
         }
 
         [HttpGet("course/{courseId}/paged")]

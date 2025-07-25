@@ -10,6 +10,7 @@ using System;
 using Online_Learning.Models.DTOs.Request.Admin.Course;
 using Online_Learning.Services.Interfaces;
 using Online_Learning.Services.Interfaces.Admin;
+using Online_Learning.Constants;
 
 namespace Online_Learning.Repositories.Implementations.Admin
 {
@@ -207,7 +208,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
             }
             if ((courseDto.AttachmentFiles?.Count ?? 0) > 1)
             {
-                throw new InvalidOperationException("Cannot upload more than 1 new image.");
+                throw new InvalidOperationException(Messages.CannotUploadMoreThanOneImage);
             }
             using var transaction = await _context.Database.BeginTransactionAsync();
             try

@@ -1,14 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Online_Learning.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Online_Learning.Models.DTOs.Request.Admin.QuizDto
 {
     public class QuizUpdateDto
     {
-        [Required(ErrorMessage = "Tên câu đố là bắt buộc")]
-        [StringLength(255, ErrorMessage = "Tên câu đố tối đa 255 ký tự")]
+        [Required(ErrorMessage = Messages.Required)]
+        [StringLength(255, ErrorMessage = Messages.MaxLength255)]
         public string QuizName { get; set; } = string.Empty;
 
-        [Range(1, int.MaxValue, ErrorMessage = "Thời gian làm bài phải lớn hơn 0")]
+        [Range(1, int.MaxValue, ErrorMessage = Messages.RangeGreaterThan0)]
         public int? QuizTime { get; set; }
 
         [Range(0, 100, ErrorMessage = "Điểm đạt phải từ 0 đến 100")]

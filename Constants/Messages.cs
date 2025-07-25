@@ -1,0 +1,81 @@
+namespace Online_Learning.Constants
+{
+    public static class Messages
+    {
+        public const string CannotUploadMoreThanOneImage = "Cannot upload more than 1 new image.";
+        public const string UsernameOrPasswordIncorrect = "Username or password is incorrect";
+        public const string AccountLocked = "Account has been locked";
+        public const string EmailAlreadyRegistered = "Email has already been registered.";
+        public const string StudentRoleNotFound = "System configuration error: Student role not found.";
+        public const string EmailNotExists = "Email address doesn't exists in our system";
+        public const string UserNotFound = "User not found.";
+        public const string OtpSendError = "An error occurred while sending the OTP. Please try again.";
+        public const string InvalidOtpCode = "Invalid OTP code.";
+        public const string OtpExpired = "OTP code has expired.";
+        public const string OtpUsed = "OTP code has already been used.";
+        public const string ErrorGettingUserList = "Lỗi khi lấy danh sách người dùng: {0}";
+        public const string UserNotFoundVi = "Không tìm thấy người dùng";
+        public const string ErrorGettingUserInfo = "Lỗi khi lấy thông tin người dùng: {0}";
+        public const string EmailExistsVi = "Email đã tồn tại";
+        public const string CreateUserSuccess = "Tạo người dùng thành công";
+        public const string ErrorCreatingUser = "Lỗi khi tạo người dùng: {0}";
+        public const string UpdateUserSuccess = "Cập nhật người dùng thành công";
+        public const string ErrorUpdatingUser = "Lỗi khi cập nhật người dùng: {0}";
+        public const string DeleteUserSuccess = "Xóa người dùng thành công";
+        public const string ErrorDeletingUser = "Lỗi khi xóa người dùng: {0}";
+        public const string CannotUpdateRole = "Không thể cập nhật vai trò";
+        public const string UpdateRoleSuccess = "Cập nhật vai trò thành công";
+        public const string ErrorUpdatingRole = "Lỗi khi cập nhật vai trò: {0}";
+        public const string ResetPasswordSuccess = "Reset mật khẩu thành công. Mật khẩu mới: {0}";
+        public const string ErrorResettingPassword = "Lỗi khi reset mật khẩu: {0}";
+        public const string StatusChangeSuccess = "Đã {0} tài khoản thành công";
+        public const string ErrorChangingStatus = "Lỗi khi thay đổi trạng thái người dùng: {0}";
+        public const string LessonOrderExistsInModule = "Số thứ tự bài học này đã tồn tại trong module!";
+        public const string OnlyRateAfterCompletion = "Bạn chỉ có thể đánh giá sau khi hoàn thành khóa học.";
+        public const string QuizNotFound = "Quiz không tồn tại";
+        public const string QuizAlreadyPassed = "Quiz đã được làm và đã pass trước đó";
+        public const string InvalidQuizSubmission = "Dữ liệu nộp bài không hợp lệ";
+        public const string QuizResultNotFound = "Không tìm thấy kết quả quiz";
+        public const string CannotUploadMoreThanOneImageV2 = "Cannot upload more than 1 image.";
+        public const string CourseNotFound = "Course not found";
+        public const string ModuleOrderExistsInCourse = "Số thứ tự module này đã tồn tại trong khóa học!";
+        public const string CannotDeleteModuleWithChildren = "Cannot delete module that contains lessons or quizzes. Please delete them first.";
+        public const string UserNotRatedCourse = "Người dùng chưa đánh giá khóa học này.";
+        public const string RatingNotFound = "Không tìm thấy đánh giá.";
+        public const string DeleteRatingSuccess = "Xóa đánh giá thành công.";
+        public const string DiscountDeletedSuccess = "Discount deleted successfully";
+        public const string Required = "Trường này là bắt buộc";
+        public const string InvalidEmail = "Email không hợp lệ";
+        public const string MaxLength100 = "Không được vượt quá 100 ký tự";
+        public const string MaxLength255 = "Không được vượt quá 255 ký tự";
+        public const string MaxLength1000 = "Không được vượt quá 1000 ký tự";
+        public const string MinLength6 = "Phải có ít nhất 6 ký tự";
+        public const string MinLength1 = "Phải có ít nhất 1 giá trị";
+        public const string InvalidPhone = "Số điện thoại không hợp lệ";
+        public const string Range0Or1 = "Giá trị phải là 0 (Bản nháp) hoặc 1 (Hoạt động)";
+        public const string RangeGreaterThan0 = "Giá trị phải lớn hơn 0";
+        public const string RangeGreaterOrEqual0 = "Giá trị phải lớn hơn hoặc bằng 0";
+        public const string EmailCannotBeEmpty = "Email không được để trống";
+        public const string PasswordCannotBeEmpty = "Mật khẩu không được để trống";
+        public const string FullNameCannotBeEmpty = "Họ tên không được để trống";
+        public const string AddressMaxLength = "Địa chỉ không được vượt quá 255 ký tự";
+        public const string CourseNotFoundCart = "The course can not be found";
+        public const string CartItemNotFound = "The cart item can not be found";
+        public const string ErrorRetrievingComments = "An error occurred while retrieving comments";
+        public const string ErrorRetrievingComment = "An error occurred while retrieving the comment";
+        public const string LessonNotFound = "Lesson not found";
+        public const string ParentCommentNotFound = "Parent comment not found";
+        public const string ErrorCreatingComment = "An error occurred while creating the comment";
+        public const string ErrorUpdatingComment = "An error occurred while updating the comment";
+        public const string ErrorDeletingComment = "An error occurred while deleting the comment";
+        public const string CommentStatusUpdated = "Comment status updated successfully";
+        public const string ErrorModeratingComment = "An error occurred while moderating the comment";
+        public const string ErrorRetrievingLessonComments = "An error occurred while retrieving lesson comments";
+        public const string ErrorRetrievingPendingComments = "An error occurred while retrieving pending comments";
+        public const string NoValidCommentsForModeration = "No valid comments found for moderation";
+        public const string BulkModerationSuccess = "Bulk moderation completed successfully";
+        public const string ErrorBulkModeration = "An error occurred during bulk moderation";
+        public const string ErrorRetrievingCommentStatistics = "An error occurred while retrieving statistics";
+        // ... Thêm các message khác ở đây khi rà soát tiếp
+    }
+} 

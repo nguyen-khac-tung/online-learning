@@ -1,14 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Online_Learning.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Online_Learning.Models.DTOs.Request.Admin.ModuleDto
 {
     public class ModuleUpdateDto
     {
-        [Required(ErrorMessage = "Tên module là bắt buộc")]
-        [StringLength(255, ErrorMessage = "Tên module tối đa 255 ký tự")]
+        [Required(ErrorMessage = Messages.Required)]
+        [StringLength(255, ErrorMessage = Messages.MaxLength255)]
         public string ModuleName { get; set; } = string.Empty;
 
-        [Range(0, int.MaxValue, ErrorMessage = "Số thứ tự module phải lớn hơn hoặc bằng 0")]
+        [Range(0, int.MaxValue, ErrorMessage = Messages.RangeGreaterOrEqual0)]
         public int ModuleNumber { get; set; }
 
         public int Status { get; set; }

@@ -4,6 +4,7 @@ using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Interfaces;
 using Online_Learning.Services.Interfaces;
 using Online_Learning.Constants.Enums;
+using Online_Learning.Constants;
 
 namespace Online_Learning.Services.Implementations
 {
@@ -76,21 +77,21 @@ namespace Online_Learning.Services.Implementations
             var quiz = await _quizRepository.GetQuizWithQuestionsAndOptionsAsync(request.QuizId);
             if (quiz == null)
             {
-                throw new InvalidOperationException("Quiz không tồn tại");
+                throw new InvalidOperationException(Messages.QuizNotFound);
             }
 
             // Kiểm tra quiz đã được làm chưa và đã pass chưa
             var existingResult = await _quizRepository.GetUserQuizResultAsync(userId, request.QuizId);
             if (existingResult != null && (quiz.PassScore == null || existingResult.Score >= quiz.PassScore))
             {
-                throw new InvalidOperationException("Quiz đã được làm và đã pass trước đó");
+                throw new InvalidOperationException(Messages.QuizAlreadyPassed);
             }
 
             // Validate submission
             var isValid = await _quizRepository.ValidateQuizSubmissionAsync(request, request.QuizId);
             if (!isValid)
             {
-                throw new InvalidOperationException("Dữ liệu nộp bài không hợp lệ");
+                throw new InvalidOperationException(Messages.InvalidQuizSubmission);
             }
 
             var startTime = DateTime.UtcNow;
@@ -184,13 +185,13 @@ namespace Online_Learning.Services.Implementations
             var userQuizResult = await _quizRepository.GetUserQuizResultAsync(userId, quizId);
             if (userQuizResult == null)
             {
-                throw new InvalidOperationException("Không tìm thấy kết quả quiz");
+                throw new InvalidOperationException(Messages.QuizResultNotFound);
             }
 
             var quiz = await _quizRepository.GetQuizWithQuestionsAndOptionsAsync(quizId);
             if (quiz == null)
             {
-                throw new InvalidOperationException("Quiz không tồn tại");
+                throw new InvalidOperationException(Messages.QuizNotFound);
             }
 
             // Tạo question results (có thể lưu vào database để tối ưu)

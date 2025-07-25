@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Online_Learning.Repositories.Interfaces.Admin;
+using Online_Learning.Constants;
+
 
 namespace Online_Learning.Repositories.Implementations.Admin
 {
@@ -137,12 +139,12 @@ namespace Online_Learning.Repositories.Implementations.Admin
             var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == module.CourseId && c.DeletedAt == null);
             if (!courseExists)
             {
-                throw new InvalidOperationException("Course not found");
+                throw new InvalidOperationException(Messages.CourseNotFound);
             }
-            // Ki?m tra trùng s? th? t? module trong course
+            // Ki?m tra trng s? th? t? module trong course
             bool isDuplicate = await _context.Modules.AnyAsync(m => m.CourseId == module.CourseId && m.ModuleNumber == module.ModuleNumber);
             if (isDuplicate)
-                throw new InvalidOperationException("S? th? t? module này ?ã t?n t?i trong khóa h?c!");
+                throw new InvalidOperationException(Messages.ModuleOrderExistsInCourse);
             // Auto-generate module number if not provided
             if (module.ModuleNumber <= 0)
             {
@@ -165,10 +167,10 @@ namespace Online_Learning.Repositories.Implementations.Admin
             {
                 return false;
             }
-            // Ki?m tra trùng s? th? t? (tr? chính nó)
+            // Ki?m tra trï¿½ng s? th? t? (tr? chï¿½nh nï¿½)
             bool isDuplicate = await _context.Modules.AnyAsync(m => m.CourseId == existingModule.CourseId && m.ModuleNumber == module.ModuleNumber && m.ModuleId != id);
             if (isDuplicate)
-                throw new InvalidOperationException("S? th? t? module này ?ã t?n t?i trong khóa h?c!");
+                throw new InvalidOperationException(Messages.ModuleOrderExistsInCourse);
             existingModule.ModuleName = module.ModuleName;
             existingModule.ModuleNumber = module.ModuleNumber;
             existingModule.Status = module.Status;
@@ -190,7 +192,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
             }
             if (module.Lessons.Any() || module.Quizzes.Any())
             {
-                throw new InvalidOperationException("Cannot delete module that contains lessons or quizzes. Please delete them first.");
+                throw new InvalidOperationException(Messages.CannotDeleteModuleWithChildren);
             }
             string courseId = module.CourseId;
             _context.Modules.Remove(module);

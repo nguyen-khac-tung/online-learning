@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Online_Learning.Services.Interfaces.Admin;
 using Online_Learning.Repositories.Interfaces.Admin;
+using Online_Learning.Constants;
 
 namespace Online_Learning.Services.Implementations.Admin
 {
@@ -45,7 +46,7 @@ namespace Online_Learning.Services.Implementations.Admin
         {
             if (courseDto.AttachmentFiles?.Count > 1)
             {
-                throw new InvalidOperationException("Cannot upload more than 1 image.");
+                throw new InvalidOperationException(Messages.CannotUploadMoreThanOneImageV2);
             }
             var course = new Course
             {

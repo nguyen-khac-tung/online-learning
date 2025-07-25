@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Online_Learning.Constants;
 using Online_Learning.Constants.Enums;
 using Online_Learning.Models.DTOs.Comment;
 using Online_Learning.Models.DTOs.Common;
@@ -98,7 +99,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while getting comments");
-                return ApiResponse<PagedResult<CommentDto>>.ErrorResponse("An error occurred while retrieving comments");
+                return ApiResponse<PagedResult<CommentDto>>.ErrorResponse(Messages.ErrorRetrievingComments);
             }
         }
 
@@ -124,7 +125,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while getting comment by id: {CommentId}", commentId);
-                return ApiResponse<CommentDto>.ErrorResponse("An error occurred while retrieving the comment");
+                return ApiResponse<CommentDto>.ErrorResponse(Messages.ErrorRetrievingComment);
             }
         }
 
@@ -136,7 +137,7 @@ namespace Online_Learning.Services.Implementations
                 var lesson = await _context.Lessons.FindAsync(request.LessonId);
                 if (lesson == null)
                 {
-                    return ApiResponse<CommentDto>.ErrorResponse("Lesson not found");
+                    return ApiResponse<CommentDto>.ErrorResponse(Messages.LessonNotFound);
                 }
 
                 // Validate parent comment if provided
@@ -145,7 +146,7 @@ namespace Online_Learning.Services.Implementations
                     var parentComment = await _context.Comments.FindAsync(request.ParentCommentId.Value);
                     if (parentComment == null)
                     {
-                        return ApiResponse<CommentDto>.ErrorResponse("Parent comment not found");
+                        return ApiResponse<CommentDto>.ErrorResponse(Messages.ParentCommentNotFound);
                     }
                 }
 
@@ -180,7 +181,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while creating comment");
-                return ApiResponse<CommentDto>.ErrorResponse("An error occurred while creating the comment");
+                return ApiResponse<CommentDto>.ErrorResponse(Messages.ErrorCreatingComment);
             }
         }
 
@@ -222,7 +223,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while updating comment: {CommentId}", commentId);
-                return ApiResponse<CommentDto>.ErrorResponse("An error occurred while updating the comment");
+                return ApiResponse<CommentDto>.ErrorResponse(Messages.ErrorUpdatingComment);
             }
         }
 
@@ -259,7 +260,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while deleting comment: {CommentId}", commentId);
-                return ApiResponse<bool>.ErrorResponse("An error occurred while deleting the comment");
+                return ApiResponse<bool>.ErrorResponse(Messages.ErrorDeletingComment);
             }
         }
 
@@ -282,7 +283,7 @@ namespace Online_Learning.Services.Implementations
                 {
                     CommentConstants.Status.Approved => CommentConstants.Messages.CommentApproved,
                     CommentConstants.Status.Rejected => CommentConstants.Messages.CommentRejected,
-                    _ => "Comment status updated successfully"
+                    _ => Messages.CommentStatusUpdated
                 };
 
                 _logger.LogInformation("Comment {CommentId} moderated by admin {AdminId} with action {Action}",
@@ -293,7 +294,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while moderating comment: {CommentId}", request.CommentId);
-                return ApiResponse<bool>.ErrorResponse("An error occurred while moderating the comment");
+                return ApiResponse<bool>.ErrorResponse(Messages.ErrorModeratingComment);
             }
         }
 
@@ -316,7 +317,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while getting comments for lesson: {LessonId}", lessonId);
-                return ApiResponse<List<CommentDto>>.ErrorResponse("An error occurred while retrieving lesson comments");
+                return ApiResponse<List<CommentDto>>.ErrorResponse(Messages.ErrorRetrievingLessonComments);
             }
         }
 
@@ -356,7 +357,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while getting pending comments");
-                return ApiResponse<PagedResult<CommentDto>>.ErrorResponse("An error occurred while retrieving pending comments");
+                return ApiResponse<PagedResult<CommentDto>>.ErrorResponse(Messages.ErrorRetrievingPendingComments);
             }
         }
 
@@ -452,7 +453,7 @@ namespace Online_Learning.Services.Implementations
 
                 if (!comments.Any())
                 {
-                    return ApiResponse<bool>.ErrorResponse("No valid comments found for moderation");
+                    return ApiResponse<bool>.ErrorResponse(Messages.NoValidCommentsForModeration);
                 }
 
                 foreach (var comment in comments)
@@ -466,12 +467,12 @@ namespace Online_Learning.Services.Implementations
                 _logger.LogInformation("Admin {AdminId} bulk moderated {Count} comments to status {Status}",
                     adminId, comments.Count, request.Action);
 
-                return ApiResponse<bool>.SuccessResponse(true, "Bulk moderation completed successfully");
+                return ApiResponse<bool>.SuccessResponse(true, Messages.BulkModerationSuccess);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred during bulk moderation");
-                return ApiResponse<bool>.ErrorResponse("An error occurred during bulk moderation");
+                return ApiResponse<bool>.ErrorResponse(Messages.ErrorBulkModeration);
             }
         }
 
@@ -507,7 +508,7 @@ namespace Online_Learning.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while retrieving comment statistics");
-                return ApiResponse<CommentStatisticsDto>.ErrorResponse("An error occurred while retrieving statistics");
+                return ApiResponse<CommentStatisticsDto>.ErrorResponse(Messages.ErrorRetrievingCommentStatistics);
             }
         }
     }

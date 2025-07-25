@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Online_Learning.Constants;
 using Online_Learning.Models.DTOs.Discount;
 using Online_Learning.Services.Interfaces;
 
@@ -82,7 +83,7 @@ namespace Online_Learning.Controllers
             try
             {
                 await _service.SoftDeleteAsync(id);
-                return Ok(new { message = "Discount deleted successfully" });
+                return Ok(new { message = Messages.DiscountDeletedSuccess });
             }
             catch (Exception ex)
             {

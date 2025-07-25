@@ -1,4 +1,5 @@
-﻿using Online_Learning.Models.DTOs.Request.User;
+﻿using Online_Learning.Constants;
+using Online_Learning.Models.DTOs.Request.User;
 using Online_Learning.Models.DTOs.Response.User;
 using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Interfaces;
@@ -36,7 +37,7 @@ namespace Online_Learning.Services.Implementations
             cartItemDto = null;
 
             var course = _courseRepository.GetCourseById(cartRequestDto.CourseId);
-            if (course == null) return "The course can not be found";   
+            if (course == null) return Messages.CourseNotFoundCart;   
 
             var userId = _userRepository.GetUserIdFromClaims(currentUser);
 
@@ -71,7 +72,7 @@ namespace Online_Learning.Services.Implementations
         public string DeleteCartItem(long cartItemId)
         {
             var cartItem = _cartRepository.GetCartItemByCartId(cartItemId);
-            if (cartItem == null) return "The cart item can not be found";
+            if (cartItem == null) return Messages.CartItemNotFound;
 
             _cartRepository.RemoveCartItem(cartItem);
             _cartRepository.SaveChanges();

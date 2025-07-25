@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Microsoft.IdentityModel.Tokens;
+using Online_Learning.Constants;
 using Online_Learning.Constants.Enums;
 using Online_Learning.Models.DTOs.Request.Auth;
 using Online_Learning.Models.DTOs.Response.Auth;
@@ -40,12 +41,12 @@ namespace Online_Learning.Services.Implementations
             auth = new AuthResponseDto();
 
             var user = _iUserRepository.GetUserByEmail(userLogin.Email);
-            if (user == null) return "Username or password is incorrect";
+            if (user == null) return Messages.EmailNotExists;
             if (user.Status == (int)UserStatus.Inactive)
-                return "Account has been locked";
+                return Messages.AccountLocked;
 
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(userLogin.Password, user.Password);
-            if (!isPasswordCorrect) return "Username or password is incorrect";
+            if (!isPasswordCorrect) return Messages.UsernameOrPasswordIncorrect;
 
             auth.Token = GenerateJwtToken(user);
             auth.User = new UserDto()
@@ -64,7 +65,7 @@ namespace Online_Learning.Services.Implementations
         public string RequestRegistrationOtp(UserRegisterRequest request)
         {
             var user = _iUserRepository.GetUserByEmail(request.Email);
-            if (user != null) return "Email has already been registered.";
+            if (user != null) return Messages.EmailAlreadyRegistered;
 
             var msg = SendOtp(request.Email);
             if (msg.Length > 0) return msg;
@@ -90,7 +91,7 @@ namespace Online_Learning.Services.Implementations
             };
 
             var studentRole = _iRoleRepository.GetRoleById((int)UserRole.Student);
-            if (studentRole == null) return "System configuration error: Student role not found.";
+            if (studentRole == null) return Messages.StudentRoleNotFound;
             newUser.Roles.Add(studentRole);
 
             _iUserRepository.AddUser(newUser);
@@ -135,7 +136,7 @@ namespace Online_Learning.Services.Implementations
         public string ChangePassword(ChangePasswordRequest request)
         {
             var user = _iUserRepository.GetUserByEmail(request.Email);
-            if (user == null) return "User not found.";
+            if (user == null) return Messages.UserNotFound;
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             _iUserRepository.UpdateUser(user);
@@ -151,7 +152,7 @@ namespace Online_Learning.Services.Implementations
                 string otp = ProcessAndSaveOtp(email);
                 SendOtpByEmail(email, otp);
             }
-            catch (Exception) { return "An error occurred while sending the OTP. Please try again."; }
+            catch (Exception) { return Messages.OtpSendError; }
 
             return "";
         }
@@ -188,9 +189,9 @@ namespace Online_Learning.Services.Implementations
         private string VerfifyOtpCode(string email, string otpCodeRequested, out UserOtp userOtp)
         {
             userOtp = _iUserOtpRepository.GetOtpByEmail(email);
-            if (userOtp == null || userOtp.OtpCode != otpCodeRequested) return "Invalid OTP code.";
-            if (userOtp.ExpiresAt < DateTime.Now) return "OTP code has expired.";
-            if (userOtp.UsedAt != null) return "OTP code has already been used.";
+            if (userOtp == null || userOtp.OtpCode != otpCodeRequested) return Messages.InvalidOtpCode;
+            if (userOtp.ExpiresAt < DateTime.Now) return Messages.OtpExpired;
+            if (userOtp.UsedAt != null) return Messages.OtpUsed;
 
             return "";
         }

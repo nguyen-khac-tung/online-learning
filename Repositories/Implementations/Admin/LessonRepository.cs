@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using Online_Learning.Repositories.Interfaces.Admin;
+using Online_Learning.Constants;
 
 namespace Online_Learning.Repositories.Implementations.Admin
 {
@@ -137,7 +138,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
             // Kiểm tra trùng số thứ tự trong module
             bool isDuplicate = await _context.Lessons.AnyAsync(l => l.ModuleId == lesson.ModuleId && l.LessonNumber == lesson.LessonNumber);
             if (isDuplicate)
-                throw new InvalidOperationException("Số thứ tự bài học này đã tồn tại trong module!");
+                throw new InvalidOperationException(Messages.LessonOrderExistsInModule);
 
             try
             {
@@ -166,7 +167,7 @@ namespace Online_Learning.Repositories.Implementations.Admin
             // Kiểm tra trùng số thứ tự (trừ chính nó)
             bool isDuplicate = await _context.Lessons.AnyAsync(l => l.ModuleId == existingLesson.ModuleId && l.LessonNumber == lesson.LessonNumber && l.LessonId != id);
             if (isDuplicate)
-                throw new InvalidOperationException("Số thứ tự bài học này đã tồn tại trong module!");
+                throw new InvalidOperationException(Messages.LessonOrderExistsInModule);
 
             existingLesson.LessonNumber = lesson.LessonNumber;
             existingLesson.LessonName = lesson.LessonName;

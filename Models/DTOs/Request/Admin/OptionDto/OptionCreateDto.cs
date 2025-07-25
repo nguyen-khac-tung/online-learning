@@ -1,15 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Online_Learning.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Online_Learning.Models.DTOs.Request.Admin.OptionDto
 {
     public class OptionCreateDto
     {
-        [Required(ErrorMessage = "Nội dung tùy chọn là bắt buộc")]
-        [StringLength(255, ErrorMessage = "Nội dung tùy chọn tối đa 255 ký tự")]
+        [Required(ErrorMessage = Messages.Required)]
+        [StringLength(255, ErrorMessage = Messages.MaxLength255)]
         public string Content { get; set; } = string.Empty;
         public bool IsCorrect { get; set; } = false;
 
-        [Range(0, 1, ErrorMessage = "Trạng thái phải là 0 (Bản nháp) hoặc 1 (Hoạt động)")]
+        [Range(0, 1, ErrorMessage = Messages.Range0Or1)]
         public int Status { get; set; } = 1;
     }
 }

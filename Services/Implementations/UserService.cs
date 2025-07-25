@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using Online_Learning.Constants;
 
 namespace Online_Learning.Services.Implementations
 {
@@ -58,7 +59,7 @@ namespace Online_Learning.Services.Implementations
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<PagedResponse<UserResponse>>.ErrorResult($"Lỗi khi lấy danh sách người dùng: {ex.Message}");
+                return AdminApiResponse<PagedResponse<UserResponse>>.ErrorResult(string.Format(Messages.ErrorGettingUserList, ex.Message));
             }
         }
 
@@ -69,7 +70,7 @@ namespace Online_Learning.Services.Implementations
                 var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null)
             {
-                    return AdminApiResponse<UserResponse>.ErrorResult("Không tìm thấy người dùng");
+                    return AdminApiResponse<UserResponse>.ErrorResult(Messages.UserNotFoundVi);
             }
 
                 var userResponse = MapToUserResponse(user);
@@ -77,7 +78,7 @@ namespace Online_Learning.Services.Implementations
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<UserResponse>.ErrorResult($"Lỗi khi lấy thông tin người dùng: {ex.Message}");
+                return AdminApiResponse<UserResponse>.ErrorResult(string.Format(Messages.ErrorGettingUserInfo, ex.Message));
             }
         }
 
@@ -88,7 +89,7 @@ namespace Online_Learning.Services.Implementations
                 // Check if email already exists
                 if (await _userRepository.EmailExistsAsync(request.Email))
                 {
-                    return AdminApiResponse<UserResponse>.ErrorResult("Email đã tồn tại");
+                    return AdminApiResponse<UserResponse>.ErrorResult(Messages.EmailExistsVi);
                 }
 
                 var user = new User
@@ -120,11 +121,11 @@ namespace Online_Learning.Services.Implementations
                 var userWithRoles = await _userRepository.GetUserByIdAsync(createdUser.UserId);
                 var userResponse = MapToUserResponse(userWithRoles!);
 
-                return AdminApiResponse<UserResponse>.SuccessResult(userResponse, "Tạo người dùng thành công");
+                return AdminApiResponse<UserResponse>.SuccessResult(userResponse, Messages.CreateUserSuccess);
             }
             catch (Exception ex)
         {
-                return AdminApiResponse<UserResponse>.ErrorResult($"Lỗi khi tạo người dùng: {ex.Message}");
+                return AdminApiResponse<UserResponse>.ErrorResult(string.Format(Messages.ErrorCreatingUser, ex.Message));
             }
         }
 
@@ -135,7 +136,7 @@ namespace Online_Learning.Services.Implementations
                 var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null)
             {
-                    return AdminApiResponse<UserResponse>.ErrorResult("Không tìm thấy người dùng");
+                    return AdminApiResponse<UserResponse>.ErrorResult(Messages.UserNotFoundVi);
             }
 
                 // Update user properties
@@ -149,11 +150,11 @@ namespace Online_Learning.Services.Implementations
                 var updatedUser = await _userRepository.UpdateUserAsync(user);
                 var userResponse = MapToUserResponse(updatedUser);
 
-                return AdminApiResponse<UserResponse>.SuccessResult(userResponse, "Cập nhật người dùng thành công");
+                return AdminApiResponse<UserResponse>.SuccessResult(userResponse, Messages.UpdateUserSuccess);
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<UserResponse>.ErrorResult($"Lỗi khi cập nhật người dùng: {ex.Message}");
+                return AdminApiResponse<UserResponse>.ErrorResult(string.Format(Messages.ErrorUpdatingUser, ex.Message));
             }
         }
 
@@ -164,14 +165,14 @@ namespace Online_Learning.Services.Implementations
                 var result = await _userRepository.DeleteUserAsync(userId);
                 if (!result)
                 {
-                    return AdminApiResponse<bool>.ErrorResult("Không tìm thấy người dùng");
+                    return AdminApiResponse<bool>.ErrorResult(Messages.UserNotFoundVi);
                 }
 
-                return AdminApiResponse<bool>.SuccessResult(true, "Xóa người dùng thành công");
+                return AdminApiResponse<bool>.SuccessResult(true, Messages.DeleteUserSuccess);
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<bool>.ErrorResult($"Lỗi khi xóa người dùng: {ex.Message}");
+                return AdminApiResponse<bool>.ErrorResult(string.Format(Messages.ErrorDeletingUser, ex.Message));
             }
         }
 
@@ -182,7 +183,7 @@ namespace Online_Learning.Services.Implementations
                 var user = await _userRepository.GetUserByIdAsync(userId);
                 if (user == null)
                 {
-                    return AdminApiResponse<bool>.ErrorResult("Không tìm thấy người dùng");
+                    return AdminApiResponse<bool>.ErrorResult(Messages.UserNotFoundVi);
                 }
 
                 // Toggle between Active and Inactive
@@ -191,11 +192,11 @@ namespace Online_Learning.Services.Implementations
                 await _userRepository.UpdateUserAsync(user);
 
                 var statusText = user.Status == (int)UserStatus.Active ? "kích hoạt" : "vô hiệu hóa";
-                return AdminApiResponse<bool>.SuccessResult(true, $"Đã {statusText} tài khoản thành công");
+                return AdminApiResponse<bool>.SuccessResult(true, string.Format(Messages.StatusChangeSuccess, statusText));
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<bool>.ErrorResult($"Lỗi khi thay đổi trạng thái người dùng: {ex.Message}");
+                return AdminApiResponse<bool>.ErrorResult(string.Format(Messages.ErrorChangingStatus, ex.Message));
             }
         }
 
@@ -206,7 +207,7 @@ namespace Online_Learning.Services.Implementations
                 var user = await _userRepository.GetUserByIdAsync(userId);
                 if (user == null)
                 {
-                    return AdminApiResponse<bool>.ErrorResult("Không tìm thấy người dùng");
+                    return AdminApiResponse<bool>.ErrorResult(Messages.UserNotFoundVi);
                 }
 
                 // Generate new password (you might want to send this via email)
@@ -217,11 +218,11 @@ namespace Online_Learning.Services.Implementations
 
                 // In real application, you would send the new password via email
                 // For now, we'll just return success
-                return AdminApiResponse<bool>.SuccessResult(true, $"Reset mật khẩu thành công. Mật khẩu mới: {newPassword}");
+                return AdminApiResponse<bool>.SuccessResult(true, string.Format(Messages.ResetPasswordSuccess, newPassword));
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<bool>.ErrorResult($"Lỗi khi reset mật khẩu: {ex.Message}");
+                return AdminApiResponse<bool>.ErrorResult(string.Format(Messages.ErrorResettingPassword, ex.Message));
             }
         }
 
@@ -231,20 +232,20 @@ namespace Online_Learning.Services.Implementations
             {
                 if (!await _userRepository.UserExistsAsync(userId))
                 {
-                    return AdminApiResponse<bool>.ErrorResult("Không tìm thấy người dùng");
+                    return AdminApiResponse<bool>.ErrorResult(Messages.UserNotFoundVi);
                 }
 
                 var result = await _userRepository.UpdateUserRolesAsync(userId, request.Roles);
                 if (!result)
                 {
-                    return AdminApiResponse<bool>.ErrorResult("Không thể cập nhật vai trò");
+                    return AdminApiResponse<bool>.ErrorResult(Messages.CannotUpdateRole);
                 }
 
-                return AdminApiResponse<bool>.SuccessResult(true, "Cập nhật vai trò thành công");
+                return AdminApiResponse<bool>.SuccessResult(true, Messages.UpdateRoleSuccess);
             }
             catch (Exception ex)
             {
-                return AdminApiResponse<bool>.ErrorResult($"Lỗi khi cập nhật vai trò: {ex.Message}");
+                return AdminApiResponse<bool>.ErrorResult(string.Format(Messages.ErrorUpdatingRole, ex.Message));
             }
         }
 

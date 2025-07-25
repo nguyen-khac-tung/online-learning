@@ -1,4 +1,5 @@
-﻿using Online_Learning.Models.DTOs.Rating;
+﻿using Online_Learning.Constants;
+using Online_Learning.Models.DTOs.Rating;
 using Online_Learning.Models.Entities;
 using Online_Learning.Repositories.Interfaces;
 using Online_Learning.Services.Interfaces;
@@ -20,7 +21,7 @@ namespace Online_Learning.Services.Implementations
         {
             var hasCompleted = await _enrollRepo.HasCompletedCourseAsync(userId, req.CourseID);
             if (!hasCompleted)
-                throw new InvalidOperationException("Bạn chỉ có thể đánh giá sau khi hoàn thành khóa học.");
+                throw new InvalidOperationException(Messages.OnlyRateAfterCompletion);
 
             var existing = await _repo.GetByUserCourseAsync(userId, req.CourseID);
             if (existing != null)
